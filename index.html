@@ -154,100 +154,96 @@
 
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-    #grid-scene {
-      display: none;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7); 
-      padding: 40px 20px;
-      box-sizing: border-box;
-    }
-    .grid-title {
-        text-align: center;
-        font-size: 1.8em;
-        margin-top: 50px;
-        color: #fff;
-        text-shadow: 2px 2px 4px #000;
-    }
-    .grid-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-top: 40px;
-    }
-    .sect-btn {
-      background: rgba(255,255,255,0.85);
-      color: #000;
-      padding: 20px 10px;
-      text-align: center;
-      font-weight: bold;
-      border: 1px solid #000;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .sect-btn:hover { background: #fff; transform: scale(1.05); }
+/* 섹션별 그룹 스타일 */
+.grid-group {
+    margin-bottom: 25px;
+}
+
+.grid-sub-title {
+    font-size: 1.1em;
+    color: var(--point-red);
+    border-left: 3px solid var(--point-red);
+    padding-left: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: left;
+}
+
+/* 그리드 컨테이너는 유지하되 간격 조정 */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+/* 스크롤이 가능하도록 grid-scene 수정 */
+#grid-scene {
+    display: none;
+    width: 100%; 
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85); 
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; /* 내용이 많아지면 스크롤 생성 */
+}
   </style>
 </head>
 <body>
 
 <div class="game-window">
 
-  <section id="cover-scene">
-    <img src="https://raw.githubusercontent.com/qdm313/ghr/main/표지.webp" class="cover-art">
-    <button class="btn-common" onclick="showPrologue()">- 강호 입문 -</button>
-  </section>
-
-  <section id="prologue-scene" onclick="nextPrologue()">
-    <button id="prev-prologue-btn" class="prev-btn" onclick="event.stopPropagation(); prevPrologue();">
-       ↺
-    </button>
-
-    <div class="prologue-container">
-      <div id="prologue-tag" class="prologue-section-tag"></div>
-      <div id="prologue-content" class="prologue-text"></div>
-    </div>
-
-    <div id="click-hint" class="click-hint">화면을 눌러 다음 서사로</div>
-
-    <button id="prologue-end-btn"
-            class="btn-common"
-            onclick="event.stopPropagation(); showGrid();"
-            style="display:none; position:absolute; bottom:20%; left:50%; transform:translateX(-50%);">
-      강호 일람
-    </button>
-  </section>
-
   <section id="grid-scene">
-    <div class="grid-title">강호 세력도</div>
-    <div class="grid-container">
-        <div class="sect-btn">화산파</div>
-        <div class="sect-btn">종남파</div>
-        <div class="sect-btn">소림파</div>
-        <div class="sect-btn">무당파</div>
-        <div class="sect-btn">아미파</div>
-        <div class="sect-btn">청성파</div>
-		<div class="sect-btn">점창파</div>
-        <div class="sect-btn">공동파</div>
-        <div class="sect-btn">해남파</div>
-        <div class="sect-btn">개방</div>
-		
-        <div class="sect-btn">남궁세가</div>
-        <div class="sect-btn">모용세가</div>
-	    <div class="sect-btn">사천당문</div>
-        <div class="sect-btn">황보세가</div>
-        <div class="sect-btn">제갈세가</div>
-		
-        <div class="sect-btn">장강흑도방</div>
-        <div class="sect-btn">녹림오십채</div>
-        <div class="sect-btn">하오문</div>
-		<div class="sect-btn">살막</div>
-		
-        <div class="sect-btn">진주언가</div>
-        <div class="sect-btn">영겁문</div>
-        <div class="sect-btn">검마</div>	
-    </div>
-    <div style="text-align:center; margin-top:30px;">
-        <button class="btn-common" onclick="location.reload()">처음으로</button>
-    </div>
+      <div class="grid-title" style="margin-top: 20px; margin-bottom: 30px;">강호 세력도</div>
+
+      <div class="grid-group">
+          <div class="grid-sub-title">구파일방 (九派一幇)</div>
+          <div class="grid-container">
+              <div class="sect-btn">화산파</div>
+              <div class="sect-btn">종남파</div>
+              <div class="sect-btn">소림파</div>
+              <div class="sect-btn">무당파</div>
+              <div class="sect-btn">아미파</div>
+              <div class="sect-btn">청성파</div>
+              <div class="sect-btn">점창파</div>
+              <div class="sect-btn">공동파</div>
+              <div class="sect-btn">해남파</div>
+              <div class="sect-btn">개방</div>
+          </div>
+      </div>
+
+      <div class="grid-group">
+          <div class="grid-sub-title">오대세가 (五大世家)</div>
+          <div class="grid-container">
+              <div class="sect-btn">남궁세가</div>
+              <div class="sect-btn">모용세가</div>
+              <div class="sect-btn">사천당문</div>
+              <div class="sect-btn">황보세가</div>
+              <div class="sect-btn">제갈세가</div>
+          </div>
+      </div>
+
+      <div class="grid-group">
+          <div class="grid-sub-title">흑무맹 (黑武盟)</div>
+          <div class="grid-container">
+              <div class="sect-btn">장강흑도방</div>
+              <div class="sect-btn">녹림오십채</div>
+              <div class="sect-btn">하오문</div>
+              <div class="sect-btn">살막</div>
+          </div>
+      </div>
+
+      <div class="grid-group">
+          <div class="grid-sub-title">기타 세력</div>
+          <div class="grid-container">
+              <div class="sect-btn">진주언가</div>
+              <div class="sect-btn">영겁문</div>
+              <div class="sect-btn">검마</div>
+          </div>
+      </div>
+
+      <div style="text-align:center; margin-top:30px; padding-bottom: 50px;">
+          <button class="btn-common" onclick="location.reload()">처음으로</button>
+      </div>
   </section>
 
 </div>
