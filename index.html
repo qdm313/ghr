@@ -167,25 +167,38 @@
   </section>
 
   <section id="prologue-scene" onclick="nextPrologue()">
+
     <div class="prologue-container">
       <div id="prologue-tag" class="prologue-section-tag"></div>
       <div id="prologue-content" class="prologue-text"></div>
     </div>
-    <div id="click-hint" class="click-hint">화면을 눌러 다음 서사로</div>
-    <center>
-      <button id="prologue-end-btn" class="btn-common" 
-              onclick="event.stopPropagation(); showGrid();" 
-              style="display:none; position:absolute; bottom:30%;">강호 일람</button>
-    </center>
-  </section>
 
-  <section id="grid-scene">
-    <h2 style="text-align:center; color:var(--point-red); font-size: 2.0em; text-shadow: 1px 1px 2px #fff;">강호 세력도</h2>
-    <div class="grid-container">
-      <div class="sect-btn" onclick="alert('화산파 상세')">화산</div>
-      <div class="sect-btn" onclick="alert('남궁세가 상세')">남궁</div>
+    <!-- 다음 서사 안내 -->
+    <div id="click-hint"
+         class="click-hint"
+         style="
+           position:absolute;
+           bottom:30%;
+           left:50%;
+           transform:translateX(-50%);
+         ">
+      화면을 눌러 다음 서사로
     </div>
-    <center><button class="btn-common" onclick="location.reload()" style="margin-top:60px; border-color:#000; color:#000;">처음으로</button></center>
+
+    <!-- 강호 일람 버튼 -->
+    <button id="prologue-end-btn"
+            class="btn-common"
+            onclick="event.stopPropagation(); showGrid();"
+            style="
+              display:none;
+              position:absolute;
+              bottom:20%;
+              left:50%;
+              transform:translateX(-50%) translateX(5pt);
+            ">
+      강호 일람
+    </button>
+
   </section>
 
 </div>
