@@ -178,23 +178,28 @@
       font-weight: bold;
       text-align: left;
     }
-
+/* 그리드 컨테이너: 3열(1fr 1fr 1fr)로 변경 */
     .grid-container {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
     }
-
+/* 섹션 버튼: 3열에 맞춰 폰트와 패딩 조정 */
     .sect-btn {
       background: rgba(255,255,255,0.85);
       color: #000;
-      padding: 15px 5px;
+      padding: 12px 2px;
       text-align: center;
       font-weight: bold;
       border: 1px solid #000;
       cursor: pointer;
       transition: 0.2s;
-      font-size: 0.9em;
+      font-size: 0.85em;
+      word-break: keep-all; /* 단어 단위 줄바꿈 방지 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 45px; /* 버튼 높이 통일 */
     }
     .sect-btn:hover { background: #fff; transform: scale(1.02); }
   </style>
