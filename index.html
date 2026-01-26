@@ -37,10 +37,9 @@
       max-width: 500px;
       height: 100%;
       position: relative;
-      background: rgba(0, 0, 0, 0.4); /* 배경 이미지 가독성 확보 */
+      background: rgba(0, 0, 0, 0.4);
     }
 
-    /* ---------- 표지 ---------- */
     #cover-scene {
       display: flex;
       flex-direction: column;
@@ -56,13 +55,34 @@
       margin-bottom: 40px;
     }
 
-    /* ---------- 프롤로그 ---------- */
     #prologue-scene {
       display: none;
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.85);
       cursor: pointer;
+    }
+
+    /* 되감기 버튼 스타일 */
+    .prev-btn {
+      position: absolute;
+      top: 25px;
+      right: 25px;
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: rgba(255, 255, 255, 0.5);
+      padding: 5px 12px;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: 0.3s;
+      z-index: 100;
+      display: none;
+      border-radius: 4px;
+    }
+    .prev-btn:hover {
+      border-color: #fff;
+      color: #fff;
+      background: rgba(255,255,255,0.1);
     }
 
     .prologue-container {
@@ -107,7 +127,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ---------- 버튼 및 힌트 ---------- */
     .btn-common {
       padding: 15px 35px;
       background: rgba(0,0,0,0.6);
@@ -135,11 +154,9 @@
 
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-/* ---------- 세력도 (강호 일람) - 수정 완료 ---------- */
     #grid-scene {
       display: none;
       width: 100%; height: 100%;
-      /* 캐릭터소개바탕 이미지를 제거하고 반투명 검정 배경만 사용 */
       background: rgba(0, 0, 0, 0.7); 
       padding: 40px 20px;
       box-sizing: border-box;
@@ -180,6 +197,10 @@
   </section>
 
   <section id="prologue-scene" onclick="nextPrologue()">
+    <button id="prev-prologue-btn" class="prev-btn" onclick="event.stopPropagation(); prevPrologue();">
+       ↺
+    </button>
+
     <div class="prologue-container">
       <div id="prologue-tag" class="prologue-section-tag"></div>
       <div id="prologue-content" class="prologue-text"></div>
@@ -253,7 +274,7 @@
       
   ];
 
-  let prologueIndex = 0;
+let prologueIndex = 0;
 
   function hideAll() {
     document.getElementById('cover-scene').style.display = 'none';
@@ -268,11 +289,13 @@
     nextPrologue();
   }
 
-  function nextPrologue() {
+  // 화면 갱신 함수 (반복되는 코드를 분리)
+  function renderPrologue() {
     const tagBox = document.getElementById('prologue-tag');
     const contentBox = document.getElementById('prologue-content');
     const endBtn = document.getElementById('prologue-end-btn');
     const hint = document.getElementById('click-hint');
+    const prevBtn = document.getElementById('prev-prologue-btn');
 
     if (prologueIndex < prologueData.length) {
       const data = prologueData[prologueIndex];
@@ -285,13 +308,40 @@
       void contentBox.offsetWidth; 
       contentBox.classList.add('fade-in');
 
-      prologueIndex++;
+      // 힌트와 버튼 상태 제어
+      hint.style.display = 'block';
+      endBtn.style.display = 'none';
+      
+      // 첫 페이지가 아니면 '이전' 버튼 노출
+      prevBtn.style.display = (prologueIndex > 0) ? 'block' : 'none';
+
     } else {
       // 모든 데이터 출력 후
       tagBox.style.display = 'none';
       contentBox.innerHTML = "<p style='text-align:center; margin-top:50px;'>...그렇게 당신의 이야기가 시작된다.</p>";
       hint.style.display = 'none';
       endBtn.style.display = 'block';
+      prevBtn.style.display = 'block'; // 마지막 인사 화면에서도 되돌아갈 수 있게 유지
+    }
+  }
+
+  function nextPrologue() {
+    if (prologueIndex < prologueData.length) {
+      renderPrologue();
+      prologueIndex++;
+    } else if (prologueIndex === prologueData.length) {
+       // 마지막 인사말 출력 로직
+       renderPrologue(); 
+       prologueIndex++;
+    }
+  }
+
+  // 되감기 함수 추가
+  function prevPrologue() {
+    if (prologueIndex > 1) {
+      prologueIndex -= 2; // 현재 인덱스가 '다음'을 가리키고 있으므로 2를 빼서 이전 데이터로 접근
+      renderPrologue();
+      prologueIndex++;
     }
   }
 
