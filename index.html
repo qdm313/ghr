@@ -225,7 +225,12 @@
     const btn = document.getElementById('prologue-next-btn');
 
     if (prologueIndex < prologueData.length) {
-      container.innerHTML = `<p class="fade-in-line">${prologueData[prologueIndex]}</p>`;
+      container.innerHTML = '';
+const line = document.createElement('p');
+line.className = 'fade-in-line';
+line.innerHTML = prologueData[prologueIndex];
+container.appendChild(line);
+
       prologueIndex++;
     } else {
       hint.style.display = 'none';
