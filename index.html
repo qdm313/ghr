@@ -40,14 +40,20 @@
       background: rgba(0, 0, 0, 0.4);
     }
 
+    /* 섹션 공통 스타일 */
+    #cover-scene, #prologue-scene, #grid-scene {
+      width: 100%;
+      height: 100%;
+    }
+
     #cover-scene {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100%;
       background: var(--overlay);
     }
+
     .cover-art {
       width: 80%;
       border: 1px solid rgba(255,255,255,0.3);
@@ -57,13 +63,11 @@
 
     #prologue-scene {
       display: none;
-      width: 100%;
-      height: 100%;
       background: rgba(0, 0, 0, 0.85);
       cursor: pointer;
+      position: relative;
     }
 
-    /* 되감기 버튼 스타일 */
     .prev-btn {
       position: absolute;
       bottom: 25px;
@@ -78,11 +82,6 @@
       z-index: 100;
       display: none;
       border-radius: 4px;
-    }
-    .prev-btn:hover {
-      border-color: #fff;
-      color: #fff;
-      background: rgba(255,255,255,0.1);
     }
 
     .prologue-container {
@@ -113,11 +112,6 @@
       min-height: 200px;
     }
 
-    .prologue-text strong {
-      color: #fff;
-      border-bottom: 1px solid var(--point-red);
-    }
-
     .fade-in {
       animation: fadeInText 1s ease-in-out forwards;
     }
@@ -138,6 +132,7 @@
       transition: 0.3s;
       z-index: 10;
     }
+
     .btn-common:hover { background: #fff; color: #000; }
 
     .click-hint {
@@ -154,46 +149,77 @@
 
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-/* 섹션별 그룹 스타일 */
-.grid-group {
-    margin-bottom: 25px;
-}
+    /* 강호 세력도 스타일 */
+    #grid-scene {
+      display: none;
+      background: rgba(0, 0, 0, 0.85); 
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
 
-.grid-sub-title {
-    font-size: 1.1em;
-    color: var(--point-red);
-    border-left: 3px solid var(--point-red);
-    padding-left: 10px;
-    margin-bottom: 10px;
-    font-weight: bold;
-    text-align: left;
-}
+    .grid-title {
+      text-align: center;
+      font-size: 1.8em;
+      color: #fff;
+      text-shadow: 2px 2px 4px #000;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
 
-/* 그리드 컨테이너는 유지하되 간격 조정 */
-.grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
+    .grid-group { margin-bottom: 25px; }
 
-/* 스크롤이 가능하도록 grid-scene 수정 */
-#grid-scene {
-    display: none;
-    width: 100%; 
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85); 
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto; /* 내용이 많아지면 스크롤 생성 */
-}
+    .grid-sub-title {
+      font-size: 1.1em;
+      color: var(--point-red);
+      border-left: 3px solid var(--point-red);
+      padding-left: 10px;
+      margin-bottom: 10px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .sect-btn {
+      background: rgba(255,255,255,0.85);
+      color: #000;
+      padding: 15px 5px;
+      text-align: center;
+      font-weight: bold;
+      border: 1px solid #000;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.9em;
+    }
+    .sect-btn:hover { background: #fff; transform: scale(1.02); }
   </style>
 </head>
 <body>
 
 <div class="game-window">
 
+  <section id="cover-scene">
+    <img src="https://raw.githubusercontent.com/qdm313/ghr/main/표지.webp" class="cover-art">
+    <button class="btn-common" onclick="showPrologue()">- 강호 입문 -</button>
+  </section>
+
+  <section id="prologue-scene" onclick="nextPrologue()">
+    <button id="prev-prologue-btn" class="prev-btn" onclick="event.stopPropagation(); prevPrologue();">↺</button>
+    <div class="prologue-container">
+      <div id="prologue-tag" class="prologue-section-tag"></div>
+      <div id="prologue-content" class="prologue-text"></div>
+    </div>
+    <div id="click-hint" class="click-hint">화면을 눌러 다음 서사로</div>
+    <button id="prologue-end-btn" class="btn-common" onclick="event.stopPropagation(); showGrid();" style="display:none; position:absolute; bottom:20%; left:50%; transform:translateX(-50%);">강호 일람</button>
+  </section>
+
   <section id="grid-scene">
-      <div class="grid-title" style="margin-top: 20px; margin-bottom: 30px;">강호 세력도</div>
+      <div class="grid-title">강호 세력도</div>
 
       <div class="grid-group">
           <div class="grid-sub-title">구파일방 (九派一幇)</div>
@@ -301,10 +327,9 @@ let prologueIndex = 0;
     hideAll();
     document.getElementById('prologue-scene').style.display = 'block';
     prologueIndex = 0;
-    nextPrologue();
+    renderPrologue();
   }
 
-  // 화면 갱신 함수 (반복되는 코드를 분리)
   function renderPrologue() {
     const tagBox = document.getElementById('prologue-tag');
     const contentBox = document.getElementById('prologue-content');
@@ -317,46 +342,32 @@ let prologueIndex = 0;
       tagBox.style.display = 'inline-block';
       tagBox.innerText = data.tag;
       contentBox.innerHTML = data.html;
-
-      // 애니메이션 초기화 후 재생
       contentBox.classList.remove('fade-in');
       void contentBox.offsetWidth; 
       contentBox.classList.add('fade-in');
-
-      // 힌트와 버튼 상태 제어
       hint.style.display = 'block';
       endBtn.style.display = 'none';
-      
-      // 첫 페이지가 아니면 '이전' 버튼 노출
       prevBtn.style.display = (prologueIndex > 0) ? 'block' : 'none';
-
     } else {
-      // 모든 데이터 출력 후
       tagBox.style.display = 'none';
       contentBox.innerHTML = "<p style='text-align:center; margin-top:50px;'>...그렇게 당신의 이야기가 시작된다.</p>";
       hint.style.display = 'none';
       endBtn.style.display = 'block';
-      prevBtn.style.display = 'block'; // 마지막 인사 화면에서도 되돌아갈 수 있게 유지
+      prevBtn.style.display = 'block';
     }
   }
 
   function nextPrologue() {
     if (prologueIndex < prologueData.length) {
-      renderPrologue();
       prologueIndex++;
-    } else if (prologueIndex === prologueData.length) {
-       // 마지막 인사말 출력 로직
-       renderPrologue(); 
-       prologueIndex++;
+      renderPrologue();
     }
   }
 
-  // 되감기 함수 추가
   function prevPrologue() {
-    if (prologueIndex > 1) {
-      prologueIndex -= 2; // 현재 인덱스가 '다음'을 가리키고 있으므로 2를 빼서 이전 데이터로 접근
+    if (prologueIndex > 0) {
+      prologueIndex--;
       renderPrologue();
-      prologueIndex++;
     }
   }
 
