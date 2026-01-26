@@ -5,17 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>孤俠錄 : 화산에서 파문되었다</title>
   <style>
+    /* 폰트 설정: 궁서체 우선 적용 */
+    @font-face {
+      font-family: 'Gungsuh';
+      src: local('Gungsuh'), local('GungsuhChe'), serif;
+    }
+
     :root {
-      --bg-color: #2c2c2c;
-      --point-gold: #d4af37;
-      --text-white: #ffffff;
-      --box-bg: rgba(255, 255, 255, 0.05);
+      --main-ink: #1a1a1a;   /* 진한 먹색 */
+      --point-red: #8b0000;  /* 낙관 느낌의 진빨강 */
+      --box-bg: rgba(255, 255, 255, 0.4);
     }
 
     body {
-      background-color: var(--bg-color);
-      color: var(--text-white);
-      font-family: 'Malgun Gothic', sans-serif;
+      /* 전체 배경: 바탕화면.webp */
+      background-image: url('https://raw.githubusercontent.com/qdm313/ghr/main/바탕화면.webp');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--main-ink);
+      font-family: 'Gungsuh', 'GungsuhChe', 'Batang', serif;
       margin: 0;
       display: flex;
       justify-content: center;
@@ -23,11 +32,11 @@
 
     .game-container {
       width: 100%;
-      max-width: 800px;
+      max-width: 900px;
       min-height: 100vh;
-      position: relative;
-      padding: 20px;
+      padding: 40px 20px;
       box-sizing: border-box;
+      background: rgba(255, 255, 255, 0.1); /* 배경 이미지 살리기 위해 최소한의 오버레이 */
     }
 
     /* --- 1. 표지 섹션 --- */
@@ -40,90 +49,116 @@
       position: relative;
       display: inline-block;
       width: 100%;
+      border: 5px solid var(--main-ink); /* 족자 느낌의 테두리 */
     }
 
     .cover-wrapper img {
       width: 100%;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      display: block;
     }
 
     .btn-explore {
       position: absolute;
-      right: 20px;
+      right: 30px;
       bottom: 30px;
-      padding: 15px 30px;
-      background: rgba(0, 0, 0, 0.7);
-      color: var(--point-gold);
-      border: 2px solid var(--point-gold);
-      font-weight: bold;
+      padding: 12px 25px;
+      background: var(--main-ink);
+      color: white;
+      border: 1px solid #000;
+      font-family: 'Gungsuh';
+      font-size: 1.2em;
       cursor: pointer;
+      box-shadow: 3px 3px 10px rgba(0,0,0,0.3);
       transition: 0.3s;
-      border-radius: 5px;
     }
 
     .btn-explore:hover {
-      background: var(--point-gold);
-      color: black;
+      background: var(--point-red);
+      transform: scale(1.05);
     }
 
     /* --- 2. 앨범 그리드 섹션 --- */
     #grid-scene {
-      display: none; /* 초기엔 숨김 */
+      display: none;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 30px;
+      border-radius: 10px;
     }
 
     .category-title {
-      border-left: 4px solid var(--point-gold);
-      padding-left: 10px;
+      border-bottom: 2px solid var(--main-ink);
       margin: 30px 0 15px;
-      color: var(--point-gold);
+      font-size: 1.5em;
+      font-weight: bold;
     }
 
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
       margin-bottom: 30px;
     }
 
     .sect-btn {
-      background: var(--box-bg);
-      border: 1px solid #555;
-      color: white;
-      padding: 15px 10px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--main-ink);
+      padding: 15px;
       text-align: center;
       cursor: pointer;
       transition: 0.2s;
-      border-radius: 5px;
-      font-size: 0.9em;
+      font-weight: bold;
     }
 
     .sect-btn:hover {
-      border-color: var(--point-gold);
-      background: rgba(212, 175, 55, 0.1);
+      background: var(--main-ink);
+      color: white;
     }
 
-    /* --- 3. 상세 내용 섹션 --- */
+    /* --- 3. 상세 내용 섹션 (캐릭터소개바탕 적용) --- */
     #detail-scene {
       display: none;
-      text-align: center;
+      width: 100%;
+      min-height: 600px;
+      /* 캐릭터소개바탕.webp 적용 */
+      background-image: url('https://raw.githubusercontent.com/qdm313/ghr/main/캐릭터소개바탕.webp');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      padding: 60px;
+      box-sizing: border-box;
+      border: 2px solid #333;
+      position: relative;
+    }
+
+    .detail-content-wrapper {
+      max-width: 500px;
+      margin-left: auto; /* 매화 가지를 가리지 않게 오른쪽 배치 */
+      text-align: right;
+    }
+
+    #detail-title {
+      font-size: 2.5em;
+      color: var(--point-red);
+      margin-bottom: 10px;
+    }
+
+    #detail-text {
+      font-size: 1.2em;
+      line-height: 1.8;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 20px;
+      border-radius: 5px;
     }
 
     .btn-back {
-      margin-top: 20px;
+      margin-top: 30px;
       background: none;
-      border: 1px solid #888;
-      color: #888;
+      border: 1px solid var(--main-ink);
+      padding: 10px 20px;
       cursor: pointer;
-      padding: 5px 15px;
+      font-family: 'Gungsuh';
     }
 
-    .detail-content {
-      background: var(--box-bg);
-      padding: 30px;
-      border-radius: 15px;
-      margin-top: 20px;
-    }
+    h1 { font-size: 3em; margin-bottom: 20px; }
   </style>
 </head>
 <body>
@@ -131,7 +166,7 @@
   <div class="game-container">
     
     <section id="cover-scene">
-      <h1>孤俠錄 : 화산에서 파문되었다</h1>
+      <h1>孤俠錄</h1>
       <div class="cover-wrapper">
         <img src="https://raw.githubusercontent.com/qdm313/ghr/main/표지.webp" alt="표지">
         <button class="btn-explore" onclick="showGrid()">- 살펴보기 -</button>
@@ -139,42 +174,35 @@
     </section>
 
     <section id="grid-scene">
-      <h2 style="text-align: center;">강호 세력도</h2>
+      <h2 style="text-align: center;">강호 전경 (江湖全景)</h2>
       
       <div class="category-title">구파일방 (무림정파)</div>
-      <div class="grid-container" id="group-1">
-        <div class="sect-btn" onclick="showDetail('화산파', '매화검법의 정종. 현재 주인공의 전 문파.')">화산</div>
-        <div class="sect-btn" onclick="showDetail('소림사', '무림의 태산북두.')">소림</div>
-        <div class="sect-btn" onclick="showDetail('무당파', '태극권의 본산.')">무당</div>
-        </div>
+      <div class="grid-container">
+        <div class="sect-btn" onclick="showDetail('화산파 (華山派)', '매화의 기상이 서린 곳. 자하신공의 비급을 둘러싼 풍파의 중심지입니다.')">화산</div>
+        <div class="sect-btn" onclick="showDetail('소림사 (少林寺)', '천하무공의 출처. 무림의 태산북두로 불립니다.')">소림</div>
+        <div class="sect-btn" onclick="showDetail('무당파 (武當派)', '태극의 도를 닦는 곳. 부드러움으로 강함을 제압합니다.')">무당</div>
+      </div>
 
       <div class="category-title">무림세가</div>
       <div class="grid-container">
-        <div class="sect-btn" onclick="showDetail('남궁세가', '제왕검형의 가문.')">남궁</div>
-        <div class="sect-btn" onclick="showDetail('당문', '암기와 독의 대명사.')">당문</div>
+        <div class="sect-btn" onclick="showDetail('남궁세가', '창궁무애검법의 가문. 정파 무림의 맹주격 세력입니다.')">남궁</div>
+        <div class="sect-btn" onclick="showDetail('당문', '사천의 지배자. 암기와 독공으로는 천하에 대적할 자가 없습니다.')">당문</div>
       </div>
 
-      <div class="category-title">그 외</div>
-      <div class="grid-container">
-        <div class="sect-btn" onclick="showDetail('낭인 손천', '강호를 떠도는 고독한 칼잡이.')">손천</div>
-      </div>
-
-      <button class="btn-back" onclick="showCover()">제목으로 돌아가기</button>
+      <button class="btn-back" onclick="showCover()">처음으로</button>
     </section>
 
     <section id="detail-scene">
-      <h2 id="detail-title">문파 이름</h2>
-      <img src="https://raw.githubusercontent.com/qdm313/ghr/main/연자미.webp" alt="상세이미지" style="width:200px;">
-      <div class="detail-content" id="detail-text">
-        상세 내용이 여기에 표시됩니다.
+      <div class="detail-content-wrapper">
+        <h2 id="detail-title">문파 이름</h2>
+        <div id="detail-text">상세 내용이 표시됩니다.</div>
+        <button class="btn-back" onclick="showGrid()">목록으로 돌아가기</button>
       </div>
-      <button class="btn-back" onclick="showGrid()">목록으로 돌아가기</button>
     </section>
 
   </div>
 
   <script>
-    // 화면 전환 함수들
     function showGrid() {
       document.getElementById('cover-scene').style.display = 'none';
       document.getElementById('detail-scene').style.display = 'none';
