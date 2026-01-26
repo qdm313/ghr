@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>孤俠錄 : 화산에서 파문되었다</title>
-
   <style>
     @font-face {
       font-family: 'Gungsuh';
@@ -14,18 +13,16 @@
     :root {
       --main-ink: #1a1a1a;
       --point-red: #8b0000;
-      --bg-light: rgba(255, 255, 255, 0.85);
+      --vn-bg: rgba(0, 0, 0, 0.7); /* 비주얼 노벨풍 어두운 반투명 */
+      --text-white: #f5f5f5;
     }
 
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #f4f1ea;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      background-color: #000;
       overflow: hidden;
       font-family: 'Gungsuh', serif;
-      color: var(--main-ink);
     }
 
     body {
@@ -41,48 +38,20 @@
       max-width: 500px;
       height: 100%;
       position: relative;
-      display: flex;
-      flex-direction: column;
+      background: rgba(0,0,0,0.1); /* 배경 이미지 보호 */
     }
 
+    /* ---------- 공통 버튼 ---------- */
     .btn-common {
-      padding: 12px 25px;
-      background: var(--main-ink);
+      padding: 15px 30px;
+      background: var(--point-red);
       color: #fff;
-      border: 1px solid #444;
-      font-size: 1.1em;
+      border: 1px solid #000;
+      font-size: 1.2em;
       cursor: pointer;
-      box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-      transition: 0.3s;
-      margin-top: 15px;
+      font-family: 'Gungsuh';
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
-
-    .btn-common:hover {
-      background: #333;
-    }
-
-    /* 비주얼 노벨 페이드 효과 */
-@keyframes textFadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in-line {
-  animation: textFadeIn 0.8s ease-out forwards;
-}
-
-/* 클릭 영역 안내용 깜빡임 */
-.click-guide {
-  font-size: 0.8em;
-  color: #888;
-  margin-top: 15px;
-  animation: blink 1.5s infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
 
     /* ---------- 표지 ---------- */
     #cover-scene {
@@ -91,179 +60,180 @@
       justify-content: center;
       align-items: center;
       height: 100%;
-      padding: 20px;
-      text-align: center;
     }
-
     .cover-art {
       width: 85%;
-      aspect-ratio: 3 / 4;
-      border: 4px double var(--main-ink);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-      margin-bottom: 40px;
-      object-fit: cover;
+      border: 2px solid #fff;
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+      margin-bottom: 50px;
     }
 
-    /* ---------- 프롤로그 ---------- */
+    /* ---------- 프롤로그 (비주얼 노벨 뷰어) ---------- */
     #prologue-scene {
       display: none;
       width: 100%;
       height: 100%;
-      position: relative;
+      cursor: pointer; /* 화면 전체 클릭 유도 */
     }
 
-    /* ---------- 강호 세력도 ---------- */
-    #grid-scene {
-      display: none;
+    .vn-text-box {
+      position: absolute;
+      bottom: 0;
       width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(5px);
+      height: 35%; /* 하단 35%를 차지하여 답답함 해소 */
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 80%, transparent);
+      padding: 40px 25px;
+      box-sizing: border-box;
+      color: var(--text-white);
+      z-index: 10;
+    }
+
+    .vn-name-tag {
+      position: absolute;
+      top: -20px;
+      left: 20px;
+      background: var(--point-red);
+      padding: 5px 20px;
+      font-size: 1.1em;
+      border: 1px solid #fff;
+    }
+
+    #prologue-text-container {
+      font-size: 1.3em; /* 폰트 크게 */
+      line-height: 1.8;
+      word-break: keep-all;
+      text-shadow: 2px 2px 4px rgba(0,0,0,1);
+    }
+
+    .fade-in-line {
+      animation: vnFadeIn 0.6s ease-out forwards;
+    }
+
+    @keyframes vnFadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .click-hint {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      font-size: 0.9em;
+      color: #aaa;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* ---------- 세력도/상세 (기존 유지하되 최적화) ---------- */
+    #grid-scene, #detail-scene {
+      display: none;
+      width: 100%; height: 100%;
+      background: rgba(255, 255, 245, 0.9);
       padding: 50px 20px;
       box-sizing: border-box;
-      overflow-y: auto;
     }
 
     .grid-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 15px;
       margin-top: 30px;
     }
 
     .sect-btn {
-      background: var(--bg-light);
-      border: 1px solid var(--main-ink);
+      background: #fff;
+      border: 1px solid #000;
       padding: 20px 10px;
       text-align: center;
-      font-size: 1.2em;
       font-weight: bold;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-      cursor: pointer;
-    }
-
-    /* ---------- 상세 ---------- */
-    #detail-scene {
-      display: none;
-      width: 100%;
-      height: 100%;
-      background-image: url('https://raw.githubusercontent.com/qdm313/ghr/main/캐릭터소개바탕.webp');
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-
-    .detail-content {
-      position: absolute;
-      bottom: 12%;
-      left: 5%;
-      width: 90%;
-      background: var(--bg-light);
-      padding: 30px 20px;
-      box-sizing: border-box;
-      border-top: 3px solid var(--point-red);
-      text-align: center;
-    }
-
-    #detail-title {
-      font-size: 2em;
-      color: var(--point-red);
-      margin-bottom: 15px;
-      border-bottom: 1px solid #ccc;
-      display: inline-block;
-      padding-bottom: 5px;
-    }
-
-    #detail-text {
-      font-size: 1.05em;
-      line-height: 1.8;
-      text-align: left;
-      word-break: keep-all;
     }
   </style>
 </head>
-
 <body>
+
 <div class="game-window">
 
-  <!-- 표지 -->
   <section id="cover-scene">
     <img src="https://raw.githubusercontent.com/qdm313/ghr/main/표지.webp" class="cover-art">
-    <button class="btn-common" onclick="showPrologue()">- 입문하기 -</button>
+    <button class="btn-common" onclick="showPrologue()">- 이야기 시작 -</button>
   </section>
 
-  <!-- 프롤로그 -->
-<section id="prologue-scene" onclick="nextPrologue()">
-  <div class="detail-content">
-    <h2 id="detail-title">프롤로그</h2>
-    
-    <div id="prologue-text-container" style="min-height: 150px;">
-      </div>
+  <section id="prologue-scene" onclick="nextPrologue()">
+    <div class="vn-text-box">
+      <div class="vn-name-tag">독백</div>
+      <div id="prologue-text-container"></div>
+      <div id="click-hint" class="click-hint">▼ 다음</div>
+      <center>
+        <button id="prologue-next-btn" class="btn-common" 
+                onclick="event.stopPropagation(); showGrid();" 
+                style="display:none; margin-top:20px;">세력도 일람</button>
+      </center>
+    </div>
+  </section>
 
-    <div id="click-guide" class="click-guide">[ 화면을 터치하여 다음으로 ]</div>
-
-    <button id="prologue-next-btn" class="btn-common" 
-            onclick="event.stopPropagation(); showGrid();" 
-            style="display:none;">세력도 일람</button>
-  </div>
-</section>
-
-  <!-- 강호 세력도 -->
   <section id="grid-scene">
     <h2 style="text-align:center; color:var(--point-red);">강호 세력도</h2>
-
     <div class="grid-container">
-      <div class="sect-btn" onclick="showDetail('화산파',
-        '매화의 향기가 서린 검문.\n한때 천하를 호령했으나 지금은 쇠락의 길을 걷고 있다.')">화산</div>
-
-      <div class="sect-btn" onclick="showDetail('남궁세가',
-        '창궁무애검법으로 명성을 떨치는 세가.\n정파의 기둥이라 불린다.')">남궁</div>
-
-      <div class="sect-btn" onclick="showDetail('소림사',
-        '천하 무학의 종가.\n숭산 깊은 곳에서 불법과 무공을 함께 닦는다.')">소림</div>
-
-      <div class="sect-btn" onclick="showDetail('개방',
-        '천하 제일 방파.\n거지들의 눈과 귀는 강호 전역에 퍼져 있다.')">개방</div>
+      <div class="sect-btn" onclick="showDetail('화산파', '매화의 향기가 서린 검문. 파문당한 당신의 옛 문파.')">화산</div>
+      <div class="sect-btn" onclick="showDetail('남궁세가', '천하제일세가. 창궁무애검법의 정점.')">남궁</div>
     </div>
-
-    <div style="text-align:center; margin-top:40px;">
-      <button class="btn-common" onclick="showCover()">처음으로</button>
-    </div>
+    <center><button class="btn-common" onclick="showCover()" style="margin-top:50px;">처음으로</button></center>
   </section>
 
-  <!-- 상세 -->
   <section id="detail-scene">
-    <div class="detail-content">
-      <h2 id="detail-title"></h2>
-      <div id="detail-text"></div>
-      <button class="btn-common" onclick="showGrid()">목록으로</button>
-    </div>
+    <h2 id="detail-title" style="color:var(--point-red);"></h2>
+    <p id="detail-text" style="font-size:1.2em; line-height:1.8;"></p>
+    <center><button class="btn-common" onclick="showGrid()">목록으로</button></center>
   </section>
 
 </div>
 
 <script>
+  const prologueData = [
+    "명나라 영락제 재위 8년.",
+    "그러나, 당신이 알고 있는 역사와는 조금 다른. 무와 협이 실존하는 세계.",
+    "당신은 15년 전, 돌연 <strong>소년의 육체</strong>로 무림세계에 나타났다.",
+    "방황하던 당신을 거둔 이는 화산파 장문인 <strong>훈룡</strong>.",
+    "그 무렵 만난 <strong>연자미</strong>. 그녀는 검종 화산파의 유일한 생존자였다.",
+    "당신은 화산의 재건공신 <strong>이제자</strong>로서 이름을 알리기 시작했다.",
+    "현재... 강호의 명숙 <strong>서백경</strong>은 당신을 눈엣가시로 여겼다.",
+    "그는 <strong>자하신공</strong> 비급을 훔쳐 당신의 침소에 숨겼다.",
+    "도둑이라는 누명. 그렇게 화산은 결국 당신을 내쫓았다."
+  ];
+
+  let prologueIndex = 0;
+
   function hideAll() {
-    document.getElementById('cover-scene').style.display = 'none';
-    document.getElementById('prologue-scene').style.display = 'none';
-    document.getElementById('grid-scene').style.display = 'none';
-    document.getElementById('detail-scene').style.display = 'none';
+    ['cover-scene', 'prologue-scene', 'grid-scene', 'detail-scene'].forEach(id => {
+      document.getElementById(id).style.display = 'none';
+    });
   }
 
-  function showCover() {
-    hideAll();
-    document.getElementById('cover-scene').style.display = 'flex';
-  }
+  function showCover() { hideAll(); document.getElementById('cover-scene').style.display = 'flex'; }
 
   function showPrologue() {
     hideAll();
     document.getElementById('prologue-scene').style.display = 'block';
+    prologueIndex = 0;
+    nextPrologue();
   }
 
-  function showGrid() {
-    hideAll();
-    document.getElementById('grid-scene').style.display = 'block';
+  function nextPrologue() {
+    const container = document.getElementById('prologue-text-container');
+    const hint = document.getElementById('click-hint');
+    const btn = document.getElementById('prologue-next-btn');
+
+    if (prologueIndex < prologueData.length) {
+      container.innerHTML = `<p class="fade-in-line">${prologueData[prologueIndex]}</p>`;
+      prologueIndex++;
+    } else {
+      hint.style.display = 'none';
+      btn.style.display = 'block';
+    }
   }
+
+  function showGrid() { hideAll(); document.getElementById('grid-scene').style.display = 'block'; }
 
   function showDetail(title, text) {
     hideAll();
@@ -271,60 +241,6 @@
     document.getElementById('detail-title').innerText = title;
     document.getElementById('detail-text').innerText = text;
   }
-
-  // 프롤로그 대사 데이터
-const prologueData = [
-  "명나라 영락제 재위 8년.",
-  "그러나, 당신이 알고 있는 역사와는 조금 다른. 무와 협이 실존하는 세계.",
-  "당신은 15년 전, 돌연 <strong>소년의 육체</strong>로 무림세계에 나타났다.",
-  "연고 하나 없는 땅에서 방황하던 당신을 거둔 이는, 기종 출신의 화산파 신임 장문인 <strong>훈룡</strong>.",
-  "그는 오갈 곳 없는 당신을 문하에 들였고, 당신의 운명은 조용히 움직이기 시작했다.",
-  "그 무렵, 당신은 한 소녀를 만난다. 이름은 <strong>연자미</strong>.",
-  "그녀는 과거 내전 직후 살아남은 <strong>검종 화산파의 유일한 생존자</strong>였다.",
-  "검종검수 <strong>훈엽</strong>의 유언에 따라, 재편된 화산파에 다시 입적하던 참이었다.",
-  "동문사제 간의 살육이 휩쓸고 지나간 화산.",
-  "당신은 황폐해진 문파의 기틀을 다졌고, 어느덧 화산의 재건공신 <strong>이제자</strong>로서 이름을 알리기 시작했다.",
-  "그리고 다시, 현재로 돌아온다.",
-  "<strong>서백경</strong>. 강호에서 명망 높은 인물이나, 당신을 눈엣가시처럼 여겨왔다.",
-  "그는 <strong>자하신공</strong>의 비급을 훔친 뒤, 일부러 화산에 풍파를 불러일으켰다.",
-  "그리고 그 비급을 당신의 침소, 베개잇 속에 숨겼다.",
-  "출신이 불분명한 기인. 정체를 숨긴 채 화산에 흘러들어온 자라는 누명.",
-  "그렇게 모든 죄는 당신에게 씌워졌고, 화산은 결국 당신을 내쫓았다."
-];
-
-let prologueIndex = 0;
-
-function showPrologue() {
-  hideAll();
-  document.getElementById('prologue-scene').style.display = 'block';
-  prologueIndex = 0; // 인덱스 초기화
-  document.getElementById('prologue-text-container').innerHTML = ''; // 기존 텍스트 비우기
-  document.getElementById('prologue-next-btn').style.display = 'none';
-  document.getElementById('click-guide').style.display = 'block';
-  nextPrologue(); // 첫 대사 출력
-}
-
-function nextPrologue() {
-  const container = document.getElementById('prologue-text-container');
-  
-  if (prologueIndex < prologueData.length) {
-    // 새로운 문장을 생성하고 페이드인 클래스 부여
-    const newLine = document.createElement('p');
-    newLine.className = 'fade-in-line';
-    newLine.innerHTML = prologueData[prologueIndex];
-    
-    // 비주얼 노벨 느낌을 위해 이전 문장은 지우거나 투명하게 할 수 있습니다.
-    // 여기서는 최신 문장만 보이게 비웁니다.
-    container.innerHTML = ''; 
-    container.appendChild(newLine);
-    
-    prologueIndex++;
-  } else {
-    // 모든 대사가 끝났을 때
-    document.getElementById('click-guide').style.display = 'none';
-    document.getElementById('prologue-next-btn').style.display = 'inline-block';
-  }
-}
 </script>
 
 </body>
