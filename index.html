@@ -13,8 +13,7 @@
     :root {
       --main-ink: #1a1a1a;
       --point-red: #8b0000;
-      --vn-bg: rgba(0, 0, 0, 0.75);
-      --text-white: #f5f5f5;
+      --overlay: rgba(0, 0, 0, 0.6); /* 배경이 은은하게 보이는 오버레이 */
     }
 
     html, body {
@@ -23,6 +22,7 @@
       background-color: #000;
       overflow: hidden;
       font-family: 'Gungsuh', serif;
+      color: #fff;
     }
 
     body {
@@ -40,18 +40,6 @@
       position: relative;
     }
 
-    /* ---------- 공통 버튼 ---------- */
-    .btn-common {
-      padding: 15px 30px;
-      background: var(--point-red);
-      color: #fff;
-      border: 1px solid #000;
-      font-size: 1.1em;
-      cursor: pointer;
-      font-family: 'Gungsuh';
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-
     /* ---------- 표지 ---------- */
     #cover-scene {
       display: flex;
@@ -59,95 +47,114 @@
       justify-content: center;
       align-items: center;
       height: 100%;
+      background: var(--overlay);
     }
     .cover-art {
-      width: 85%;
-      border: 2px solid #fff;
-      box-shadow: 0 0 30px rgba(0,0,0,0.8);
-      margin-bottom: 50px;
+      width: 80%;
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 0 30px rgba(0,0,0,0.7);
+      margin-bottom: 40px;
     }
 
-    /* ---------- 프롤로그 (단락 전개형) ---------- */
+    /* ---------- 프롤로그 (화면 전체 활용) ---------- */
     #prologue-scene {
       display: none;
       width: 100%;
       height: 100%;
+      background: rgba(0, 0, 0, 0.8); /* 몰입감을 위한 어두운 배경 */
       cursor: pointer;
     }
 
-    .vn-text-box {
-      position: absolute;
-      bottom: 0;
+    .prologue-container {
       width: 100%;
-      height: 45%; /* 서사를 위해 조금 더 높임 */
-      background: linear-gradient(to top, rgba(0,0,0,1) 70%, transparent);
-      padding: 50px 30px;
-      box-sizing: border-box;
-      color: var(--text-white);
-      z-index: 10;
+      height: 100%;
       display: flex;
       flex-direction: column;
+      justify-content: center; /* 중앙 배치로 답답함 해소 */
+      padding: 0 40px;
+      box-sizing: border-box;
     }
 
-    .vn-section-title {
+    .prologue-section-tag {
       color: var(--point-red);
-      font-size: 1.4em;
-      margin-bottom: 15px;
-      border-left: 3px solid var(--point-red);
-      padding-left: 10px;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      letter-spacing: 5px;
+      border-bottom: 1px solid var(--point-red);
+      display: inline-block;
+      width: fit-content;
     }
 
-    #prologue-content {
-      font-size: 1.15em;
-      line-height: 1.8;
+    .prologue-text {
+      font-size: 1.25em;
+      line-height: 2.2;
       word-break: keep-all;
-      text-align: justify;
+      color: #e0e0e0;
+    }
+
+    .prologue-text strong {
+      color: #fff;
+      border-bottom: 1px solid var(--point-red);
     }
 
     .fade-in {
-      animation: vnFadeIn 1s ease-out forwards;
+      animation: fadeInText 1.2s ease-in-out forwards;
     }
 
-    @keyframes vnFadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    @keyframes fadeInText {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .click-hint {
       position: absolute;
-      bottom: 25px;
-      right: 30px;
+      bottom: 40px;
+      width: 100%;
+      text-align: center;
+      left: 0;
       font-size: 0.9em;
-      color: #888;
+      color: #666;
       animation: blink 2s infinite;
     }
 
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-    /* ---------- 세력도/상세 (기본 레이아웃) ---------- */
-    #grid-scene, #detail-scene {
+    /* ---------- 버튼 스타일 ---------- */
+    .btn-common {
+      padding: 15px 35px;
+      background: transparent;
+      color: #fff;
+      border: 1px solid #fff;
+      font-family: 'Gungsuh';
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn-common:hover { background: #fff; color: #000; }
+
+    /* ---------- 세력도 (기존 리소스 활용) ---------- */
+    #grid-scene {
       display: none;
       width: 100%; height: 100%;
-      background: rgba(255, 255, 245, 0.95);
-      padding: 60px 25px;
+      background-image: url('https://raw.githubusercontent.com/qdm313/ghr/main/캐릭터소개바탕.webp');
+      background-size: cover;
+      background-position: center;
+      padding: 60px 20px;
       box-sizing: border-box;
-      overflow-y: auto;
     }
-
     .grid-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 15px;
-      margin-top: 40px;
+      margin-top: 50px;
     }
-
     .sect-btn {
-      background: #fff;
-      border: 1px solid var(--main-ink);
+      background: rgba(255,255,255,0.9);
+      color: #000;
       padding: 25px 10px;
       text-align: center;
       font-weight: bold;
-      font-size: 1.1em;
+      border: 1px solid #000;
     }
   </style>
 </head>
@@ -157,81 +164,84 @@
 
   <section id="cover-scene">
     <img src="https://raw.githubusercontent.com/qdm313/ghr/main/표지.webp" class="cover-art">
-    <button class="btn-common" onclick="showPrologue()">- 이야기 시작 -</button>
+    <button class="btn-common" onclick="showPrologue()">- 강호 입문 -</button>
   </section>
 
   <section id="prologue-scene" onclick="nextPrologue()">
-    <div class="vn-text-box">
-      <div id="prologue-title" class="vn-section-title"></div>
-      <div id="prologue-content" class="fade-in"></div>
-      <div id="click-hint" class="click-hint">화면을 클릭하여 정진하십시오 ▼</div>
-      <center>
-        <button id="prologue-next-btn" class="btn-common" 
-                onclick="event.stopPropagation(); showGrid();" 
-                style="display:none; margin-top:10px;">강호로 나아가기</button>
-      </center>
+    <div class="prologue-container">
+      <div id="prologue-tag" class="prologue-section-tag"></div>
+      <div id="prologue-content" class="prologue-text"></div>
     </div>
+    <div id="click-hint" class="click-hint">화면을 눌러 다음 서사로</div>
+    <center>
+      <button id="prologue-end-btn" class="btn-common" 
+              onclick="event.stopPropagation(); showGrid();" 
+              style="display:none; position:absolute; bottom:15%;">강호에 발을 들이기</button>
+    </center>
   </section>
 
   <section id="grid-scene">
-    <h2 style="text-align:center; color:var(--point-red); font-size: 2em;">강호 세력도</h2>
+    <h2 style="text-align:center; color:var(--point-red); font-size: 2.2em; text-shadow: 1px 1px 2px #fff;">강호 세력도</h2>
     <div class="grid-container">
-      <div class="sect-btn" onclick="showDetail('화산파', '매화의 향기가 서린 검문.\n한때 천하를 호령했으나 지금은 쇠락의 길을 걷고 있다.')">화산</div>
-      <div class="sect-btn" onclick="showDetail('남궁세가', '창궁무애검법으로 명성을 떨치는 세가.\n정파의 기둥이라 불린다.')">남궁</div>
-      <div class="sect-btn" onclick="showDetail('소림사', '천하 무학의 종가.\n숭산 깊은 곳에서 불법과 무공을 함께 닦는다.')">소림</div>
-      <div class="sect-btn" onclick="showDetail('개방', '천하 제일 방파.\n거지들의 눈과 귀는 강호 전역에 퍼져 있다.')">개방</div>
+      <div class="sect-btn" onclick="alert('화산파 상세')">화산</div>
+      <div class="sect-btn" onclick="alert('남궁세가 상세')">남궁</div>
     </div>
-    <center><button class="btn-common" onclick="showCover()" style="margin-top:60px;">처음으로</button></center>
-  </section>
-
-  <section id="detail-scene">
-    <div style="border-bottom: 2px solid var(--point-red); margin-bottom: 20px;">
-        <h2 id="detail-title" style="color:var(--point-red); font-size: 2.2em; margin: 0;"></h2>
-    </div>
-    <div id="detail-text" style="font-size:1.2em; line-height:2; white-space: pre-wrap;"></div>
-    <center><button class="btn-common" onclick="showGrid()" style="margin-top:40px;">목록으로</button></center>
+    <center><button class="btn-common" onclick="location.reload()" style="margin-top:60px; border-color:#000; color:#000;">처음으로</button></center>
   </section>
 
 </div>
 
 <script>
-  // 사용자 원문 보존 데이터
+  // 사용자 제공 원문 토씨 하나 틀리지 않고 배열화
   const prologueData = [
     {
-      title: "작품 배경",
-      content: "명나라 영락제 재위 8년, 서기 1410년.<br><br>무와 협이 아직 강호를 지배하던 시대."
+      tag: "작품 배경",
+      html: `<p>명나라 영락제 재위 8년, 서기 1410년.</p>
+             <p>무와 협이 아직 강호를 지배하던 시대.</p>`
     },
     {
-      title: "과거",
-      content: "당신은 15년 전, 돌연 <strong>소년의 육체</strong>로 무림세계에 나타났다.<br><br>연고 하나 없는 땅에서 방황하던 당신을 거둔 이는, 기종 출신의 화산파 신임 장문인 <strong>훈룡</strong>.<br><br>그는 은혜를 베풀어 당신을 문하에 들였고, 그렇게 당신은 화산파의 제자가 되었다."
+      tag: "과거",
+      html: `<p>당신은 15년 전, 돌연 <strong>소년의 육체</strong>로 무림세계에 나타났다.</p>
+             <p>연고 하나 없는 땅에서 방황하던 당신을 거둔 이는, 기종 출신의 화산파 신임 장문인 <strong>훈룡</strong>.</p>
+             <p>그는 은혜를 베풀어 당신을 문하에 들였고, 그렇게 당신은 화산파의 제자가 되었다.</p>`
     },
     {
-      title: "인연",
-      content: "그 무렵, 당신은 한 소녀를 만난다. 이름은 <strong>연자미</strong>.<br><br>그녀는 과거 내전 직후 살아남은 <strong>검종 화산파의 유일한 생존자</strong>였다. 검종검수 훈엽의 유언에 따라, 훈룡의 도호 아래 새로이 재편된 화산파에 다시 입적하던 중이었다."
+      tag: "과거",
+      html: `<p>그 무렵, 당신은 한 소녀를 만난다. 이름은 <strong>연자미</strong>.</p>
+             <p>그녀는 과거 내전 직후 살아남은 <strong>검종 화산파의 유일한 생존자</strong>였다.</p>
+             <p>검종검수 <strong>훈엽</strong>의 유언에 따라, 훈룡의 도호 아래 새로이 재편된 화산파에 다시 입적하던 중이었다.</p>`
     },
     {
-      title: "성장",
-      content: "동문사제 간의 살육이 휩쓸고 지나간 화산.<br><br>당신은 그곳에서 동분서주하며 황폐해진 문파의 기틀을 다졌고, 어느덧 화산의 재건공신 <strong>이제자</strong>로서 강호에 서서히 이름을 알리기 시작했다."
+      tag: "과거",
+      html: `<p>동문사제 간의 살육이 휩쓸고 지나간 화산.</p>
+             <p>당신은 그곳에서 동분서주하며 황폐해진 문파의 기틀을 다졌고, 어느덧 화산의 재건공신 <strong>이제자</strong>로서 강호에 서서히 이름을 알리기 시작했다.</p>`
     },
     {
-      title: "누명",
-      content: "다시, 현재로 돌아온다. <strong>서백경</strong>, 강호에서 명망 높은 인물이나 그는 당신을 눈엣가시처럼 여겨왔다.<br><br>그는 <strong>자하신공</strong>의 비급을 훔친 뒤, 당신의 침소 베개잇 속에 숨겼다. 출신이 불분명한 기인이 정체를 숨기고 장문인의 방심을 유도했다는 누명."
+      tag: "현재",
+      html: `<p>다시, 현재로 돌아온다.</p>
+             <p><strong>서백경</strong>. 강호에서 명망 높은 인물.</p>
+             <p>그러나 그는 언제나 속내를 감춘 채 살아왔고, 당신을 눈엣가시처럼 여겨왔다.</p>`
     },
     {
-      title: "파문",
-      content: "비급을 훔치기 위해 처음부터 의도를 품고 접근했다는 오명.<br><br>그렇게 모든 죄는 당신에게 씌워졌고, 화산은 다시금 당신을 내쫓았다."
+      tag: "현재",
+      html: `<p>그는 <strong>자하신공</strong>의 비급을 훔친 뒤, 일부러 화산에 풍파를 불러일으켰다.</p>
+             <p>그리고 그 비급을 당신의 침소, 베개잇 속에 숨겼다.</p>`
+    },
+    {
+      tag: "현재",
+      html: `<p>출신이 불분명한 기인. 정체를 숨긴 채 화산에 흘러들어와 재건에 힘쓰며 장문인의 방심을 유도한 자.</p>
+             <p>비급을 훔치기 위해 처음부터 의도를 품고 접근했다는 누명.</p>
+             <p>그렇게 모든 죄는 당신에게 씌워졌고, 화산은 다시금 당신을 내쫓았다.</p>`
     }
   ];
 
   let prologueIndex = 0;
 
   function hideAll() {
-    ['cover-scene', 'prologue-scene', 'grid-scene', 'detail-scene'].forEach(id => {
+    ['cover-scene', 'prologue-scene', 'grid-scene'].forEach(id => {
       document.getElementById(id).style.display = 'none';
     });
   }
-
-  function showCover() { hideAll(); document.getElementById('cover-scene').style.display = 'flex'; }
 
   function showPrologue() {
     hideAll();
@@ -241,37 +251,33 @@
   }
 
   function nextPrologue() {
-    const title = document.getElementById('prologue-title');
-    const content = document.getElementById('prologue-content');
+    const tagBox = document.getElementById('prologue-tag');
+    const contentBox = document.getElementById('prologue-content');
+    const endBtn = document.getElementById('prologue-end-btn');
     const hint = document.getElementById('click-hint');
-    const btn = document.getElementById('prologue-next-btn');
 
     if (prologueIndex < prologueData.length) {
       const data = prologueData[prologueIndex];
-      title.innerText = data.title;
-      content.innerHTML = data.content;
-      
-      // 애니메이션 재시작
-      content.classList.remove('fade-in');
-      void content.offsetWidth; // 리플로우 트리거
-      content.classList.add('fade-in');
-      
+      tagBox.innerText = data.tag;
+      contentBox.innerHTML = data.html;
+
+      // 애니메이션 리셋
+      contentBox.classList.remove('fade-in');
+      void contentBox.offsetWidth; 
+      contentBox.classList.add('fade-in');
+
       prologueIndex++;
     } else {
-      title.innerText = "여정의 시작";
-      content.innerHTML = "이제 당신만의 강호를 그려나갈 때입니다.";
+      tagBox.style.display = 'none';
+      contentBox.innerHTML = "<p style='text-align:center;'>...그렇게 당신의 이야기가 시작된다.</p>";
       hint.style.display = 'none';
-      btn.style.display = 'block';
+      endBtn.style.display = 'block';
     }
   }
 
-  function showGrid() { hideAll(); document.getElementById('grid-scene').style.display = 'block'; }
-
-  function showDetail(title, text) {
+  function showGrid() {
     hideAll();
-    document.getElementById('detail-scene').style.display = 'block';
-    document.getElementById('detail-title').innerText = title;
-    document.getElementById('detail-text').innerText = text;
+    document.getElementById('grid-scene').style.display = 'block';
   }
 </script>
 
