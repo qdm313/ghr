@@ -2,59 +2,107 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>孤俠錄 : 화산에서 파문되었다</title>
   <style>
+    /* 전체 배경 및 글자색 설정 */
     body {
-      background-color: #1a1a1a;
-      color: #e0e0e0;
+      background-color: #2c2c2c; /* 진한 회색 */
+      color: #ffffff;            /* 흰색 */
       font-family: 'Malgun Gothic', sans-serif;
-      line-height: 1.6;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
+      line-height: 1.8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+
+    /* 컨테이너 설정 (가운데 정렬 및 너비 제한) */
+    .container {
+      max-width: 700px;
+      width: 90%;
+      padding: 40px 20px;
+    }
+
+    /* 이미지 스타일 */
     img {
       display: block;
       max-width: 100%;
       height: auto;
       margin: 20px auto;
-      border-radius: 8px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
-    .cover {
-      border: 2px solid #d4af37; /* 무협 느낌의 금색 테두리 */
+
+    /* 표지 이미지 전용 */
+    .cover-img {
+      border: 3px solid #777; /* 회색 테두리 */
     }
-    .character {
-      width: 300px; /* 캐릭터 이미지는 적당한 크기로 조절 */
-      float: right; /* 텍스트 옆에 배치 */
-      margin-left: 20px;
+
+    /* 캐릭터 이미지 (연자미) */
+    .char-img {
+      width: 80%;
+      border-bottom: 4px solid #d4af37; /* 캐릭터 아래 금색 포인트 */
     }
-    h1, h2 { color: #d4af37; text-align: center; }
-    section { clear: both; margin-top: 40px; }
+
+    h1 {
+      color: #d4af37; /* 제목은 무협 느낌의 금색 */
+      text-align: center;
+      border-bottom: 1px solid #555;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      color: #bbbbbb;
+      border-left: 5px solid #d4af37;
+      padding-left: 15px;
+      margin-top: 50px;
+    }
+
+    section {
+      margin-bottom: 30px;
+    }
+
+    strong {
+      color: #ffda62; /* 강조 텍스트 */
+    }
   </style>
 </head>
 <body>
 
-  <img src="https://raw.githubusercontent.com/qdm313/ghr/main/표지.webp" alt="孤俠錄 표지" class="cover">
+  <div class="container">
+    <img src="https://raw.githubusercontent.com/qdm313/ghr/main/표지.webp" alt="孤俠錄 표지" class="cover-img">
 
-  <h1>孤俠錄 : 화산에서 파문되었다</h1>
+    <h1>孤俠錄 : 화산에서 파문되었다</h1>
 
-  <section>
-    <h2>작품 배경</h2>
-    <p>명나라 영락제 재위 8년, 서기 1410년.</p>
-    <p>무와 협이 아직 강호를 지배하던 시대.</p>
-  </section>
+    <section>
+      <h2>작품 배경</h2>
+      <p>명나라 영락제 재위 8년, 서기 1410년.</p>
+      <p>무와 협이 아직 강호를 지배하던 시대.</p>
+    </section>
 
-  <section>
-    <h2>과거</h2>
-    <img src="https://raw.githubusercontent.com/qdm313/ghr/main/연자미기본.webp" alt="연자미" class="character">
-    
-    <p>당신은 15년 전, 돌연 <strong>소년의 육체</strong>로 무림세계에 나타났다.</p>
-    <p>연고 하나 없는 땅에서 방황하던 당신을 거둔 이는, 기종 출신의 화산파 신임 장문인 <strong>훈룡</strong>.</p>
-    <p>그는 은혜를 베풀어 당신을 문하에 들였고, 그렇게 당신은 화산파의 제자가 되었다.</p>
+    <section>
+      <h2>과거</h2>
+      <p>당신은 15년 전, 돌연 <strong>소년의 육체</strong>로 무림세계에 나타났다.</p>
+      <p>연고 하나 없는 땅에서 방황하던 당신을 거둔 이는, 기종 출신의 화산파 신임 장문인 <strong>훈룡</strong>.</p>
+      
+      <p>그 무렵, 당신은 한 소녀를 만난다. 이름은 <strong>연자미</strong>.</p>
+      
+      <img src="https://raw.githubusercontent.com/qdm313/ghr/main/연자미.webp" alt="연자미 일러스트" class="char-img">
 
-    <p>그 무렵, 당신은 한 소녀를 만난다. 이름은 <strong>연자미</strong>.</p>
-    <p>그녀는 과거 내전 직후 살아남은 <strong>검종 화산파의 유일한 생존자</strong>였다.</p>
-  </section>
+      <p>그녀는 과거 내전 직후 살아남은 <strong>검종 화산파의 유일한 생존자</strong>였다.</p>
+      <p>검종검수 훈엽의 유언에 따라, 훈룡의 도호 아래 새로이 재편된 화산파에 다시 입적하던 중이었다.</p>
+    </section>
 
-  </body>
+    <section>
+      <h2>현재</h2>
+      <p>다시, 현재로 돌아온다.</p>
+      <p><strong>서백경</strong>. 강호에서 명망 높은 인물.</p>
+      <p>그러나 그는 언제나 속내를 감춘 채 살아왔고, 당신을 눈엣가시처럼 여겨왔다.</p>
+      <p>그는 <strong>자하신공</strong>의 비급을 훔친 뒤, 일부러 화산에 풍파를 불러일으켰고... 그 죄는 당신에게 씌워졌다.</p>
+    </section>
+  </div>
+
+</body>
 </html>
