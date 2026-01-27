@@ -229,7 +229,7 @@
       <div class="grid-group">
           <div class="grid-sub-title">구파일방 (九派一幇)</div>
           <div class="grid-container">
-              <div class="sect-btn">화산파</div>
+              <div class="sect-btn" onclick="showHuashan()">화산파</div>
               <div class="sect-btn">종남파</div>
               <div class="sect-btn">소림파</div>
               <div class="sect-btn">무당파</div>
@@ -276,6 +276,26 @@
           <button class="btn-common" onclick="location.reload()">처음으로</button>
       </div>
   </section>
+
+  <section id="huashan-scene" style="display:none; background: rgba(0, 0, 0, 0.9); height: 100%; overflow-y: auto; padding: 20px; box-sizing: border-box;">
+    <div class="grid-title">화산파 (華山派)</div>
+    
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="https://raw.githubusercontent.com/qdm313/ghr/main/표지.webp" style="width: 100%; max-width: 300px; border: 1px solid #555;">
+    </div>
+
+    <div class="prologue-text" style="font-size: 0.95em; line-height: 1.8;">
+        <p>구파일방 중 하나로, 섬서성 화산에 위치한 문파.</p>
+        <p>매화검법과 자하신공으로 강호를 호령했으나, 최근 검종과 기종의 내분 이후 기세가 예전만 못하다.</p>
+        <hr style="border: 0.5px solid #444; margin: 20px 0;">
+        <p style="color: var(--point-red);">[현재 상태]</p>
+        <p>당신은 서백경의 계략에 빠져 자하신공 비급을 훔쳤다는 누명을 쓰고 문파에서 쫓겨난 상태다.</p>
+    </div>
+
+    <div style="text-align:center; margin-top:30px; padding-bottom: 50px;">
+        <button class="btn-common" onclick="showGrid()">뒤로 가기</button>
+    </div>
+</section>
 
 </div>
 
@@ -380,6 +400,18 @@ let prologueIndex = 0;
     hideAll();
     document.getElementById('grid-scene').style.display = 'block';
   }
+  
+  function hideAll() {
+    document.getElementById('cover-scene').style.display = 'none';
+    document.getElementById('prologue-scene').style.display = 'none';
+    document.getElementById('grid-scene').style.display = 'none';
+    document.getElementById('huashan-scene').style.display = 'none'; // 추가됨
+}
+  
+  function showHuashan() {
+    hideAll();
+    document.getElementById('huashan-scene').style.display = 'block';
+}
 </script>
 
 </body>
