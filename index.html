@@ -358,31 +358,6 @@
     // 여기에 나머지 문파들을 쭉 추가하면 됩니다!
 };
 
-// 모든 화면 숨기기 업데이트
-function hideAll() {
-    document.getElementById('cover-scene').style.display = 'none';
-    document.getElementById('prologue-scene').style.display = 'none';
-    document.getElementById('grid-scene').style.display = 'none';
-    document.getElementById('detail-scene').style.display = 'none';
-}
-
-// 상세 페이지 보여주기 함수
-function showDetail(name) {
-    const data = worldData[name];
-    if (!data) return; // 데이터가 없으면 실행 안 함
-
-    // 1. 내용 갈아끼우기
-    document.getElementById('detail-title').innerText = name;
-    document.getElementById('detail-img').src = data.img;
-    document.getElementById('detail-description').innerHTML = `<p>${data.desc}</p>`;
-    document.getElementById('detail-status').innerText = data.status;
-
-    // 2. 화면 전환
-    hideAll();
-    document.getElementById('detail-scene').style.display = 'block';
-}      
-  ];
-
 let prologueIndex = 0;
 
   // 3. 핵심 기능 함수들
