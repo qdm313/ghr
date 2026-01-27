@@ -337,7 +337,8 @@
              <p>재건에 힘쓰는 척, 장문인의 방심을 유도한 자.</p>
              <p>당신은 어처구니 없는 누명을 썼고, 화산은 결국 당신을 내쫓았다.</p>`
     }
-    
+  ];
+  
   const worldData = {
     "화산파": {
         img: "https://raw.githubusercontent.com/qdm313/ghr/main/화산.webp",
@@ -384,12 +385,17 @@ function showDetail(name) {
 
 let prologueIndex = 0;
 
+  // 3. 핵심 기능 함수들
+
+  // 모든 섹션을 숨기는 통합 함수 (하나만 있으면 됩니다)
   function hideAll() {
     document.getElementById('cover-scene').style.display = 'none';
     document.getElementById('prologue-scene').style.display = 'none';
     document.getElementById('grid-scene').style.display = 'none';
+    document.getElementById('detail-scene').style.display = 'none';
   }
 
+  // 프롤로그 시작
   function showPrologue() {
     hideAll();
     document.getElementById('prologue-scene').style.display = 'block';
@@ -397,6 +403,7 @@ let prologueIndex = 0;
     renderPrologue();
   }
 
+  // 프롤로그 내용 렌더링
   function renderPrologue() {
     const tagBox = document.getElementById('prologue-tag');
     const contentBox = document.getElementById('prologue-content');
@@ -438,22 +445,28 @@ let prologueIndex = 0;
     }
   }
 
+  // 강호 세력도(그리드) 보기
   function showGrid() {
     hideAll();
     document.getElementById('grid-scene').style.display = 'block';
   }
-  
-  function hideAll() {
-    document.getElementById('cover-scene').style.display = 'none';
-    document.getElementById('prologue-scene').style.display = 'none';
-    document.getElementById('grid-scene').style.display = 'none';
-    document.getElementById('huashan-scene').style.display = 'none'; // 추가됨
-}
-  
-  function showHuashan() {
+
+  // 문파 상세 정보 보기
+  function showDetail(name) {
+    const data = worldData[name];
+    if (!data) {
+        alert("아직 정보가 업데이트되지 않은 세력입니다.");
+        return;
+    }
+
+    document.getElementById('detail-title').innerText = name;
+    document.getElementById('detail-img').src = data.img;
+    document.getElementById('detail-description').innerHTML = `<p>${data.desc}</p>`;
+    document.getElementById('detail-status').innerText = data.status;
+
     hideAll();
-    document.getElementById('huashan-scene').style.display = 'block';
-}
+    document.getElementById('detail-scene').style.display = 'block';
+  }
 </script>
 
 </body>
