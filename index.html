@@ -166,6 +166,7 @@
       padding: 20px;
       box-sizing: border-box;
       overflow-y: auto;
+	  position: relative;
     }
 
     .grid-title {
@@ -215,60 +216,104 @@
 
 /* ===== 상세 정보 화면 ===== */
 
-#detail-scene {
-  display: none;
-  background: rgba(0, 0, 0, 0.9);
-  height: 100%;
-  overflow-y: auto;
-  padding: 20px;
-  box-sizing: border-box;
-}
+	#detail-scene {
+	  background: rgba(0, 0, 0, 0.9);
+	  height: 100%;
+	  overflow-y: auto;
+	  padding: 20px;
+	  box-sizing: border-box;
+	  position: relative;
 
-/* 캐릭터 / 문파 이미지 */
-.character-image {
-  display: block;
-  max-width: 100%;
-  max-height: 40vh;   /* 화면 높이의 40%까지만 */
-  margin: 20px auto;  /* 위아래 여백 + 가운데 정렬 */
-  object-fit: contain;
-  border-radius: 6px;
-}
+
+	/* 연출용 */
+	  opacity: 0;
+	  transform: translateY(20px);
+	  transition: opacity 0.5s ease, transform 0.5s ease;
+	  
+	/* 상호작용 차단 */
+	  pointer-events: none;
+	}
+	
+	/* 캐릭터 / 문파 이미지 공통 */
+	.character-image {
+	  display: block;
+	  max-width: 100%;
+	  max-height: 40vh;
+	  margin: 20px auto;
+	  object-fit: contain;
+	  border-radius: 6px;
+	}
+
+
+	#detail-scene.show {
+	  opacity: 1;
+	  transform: translateY(0);
+	  pointer-events: auto;
+	}
+
+	/* 스크롤 끝 광택 */
+	.scroll-glow {
+	  position: absolute;
+	  bottom: 0;
+	  left: 0;
+	  width: 100%;
+	  height: 40px;
+	  background: linear-gradient(
+		to top,
+		rgba(255,255,255,0.25),
+		rgba(255,255,255,0)
+	  );
+	  opacity: 0;
+	  pointer-events: none;
+	}
+
+	.scroll-glow.active {
+	  animation: glowFade 1.2s ease-out;
+	}
+
+	@keyframes glowFade {
+	  0%   { opacity: 0; }
+	  30%  { opacity: 0.4; }
+	  100% { opacity: 0; }
+	}
+
+
 
 /* ===== 글로벌 스크롤바 숨김 (스크롤은 유지) ===== */
 
 /* Chrome / Edge / Safari / Samsung Internet */
-*::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
+	*::-webkit-scrollbar {
+	  width: 0;
+	  height: 0;
+	}
 
-/* Firefox */
-* {
-  scrollbar-width: none;
-}
+	/* Firefox */
+	* {
+	  scrollbar-width: none;
+	}
 
-/* IE / 구 Edge */
-* {
-  -ms-overflow-style: none;
-}
+	/* IE / 구 Edge */
+	* {
+	  -ms-overflow-style: none;
+	}
 
 /* ===== 스크롤 하단 암시 연출 ===== */
 
-#grid-scene::after,
-#detail-scene::after {
-  content: "";
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 50px;
-  pointer-events: none;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.9),
-    rgba(0,0,0,0)
-  );
-}
+	#grid-scene::after,
+	#detail-scene::after {
+	  content: "";
+	  position: absolute;
+	  bottom: 0;
+	  left: 0;
+	  width: 100%;
+	  height: 50px;
+	  pointer-events: none;
+	  background: linear-gradient(
+		to top,
+		rgba(0,0,0,0.9),
+		rgba(0,0,0,0)
+	  );
+	}
 
   </style>
 </head>
@@ -345,7 +390,7 @@
       </div>
   </section>
 
-  <section id="detail-scene" style="display:none; background: rgba(0, 0, 0, 0.9); height: 100%; overflow-y: auto; padding: 20px; box-sizing: border-box;">
+  <section id="detail-scene">
       <div id="detail-title" class="grid-title">문파 이름</div>
     
       <div style="text-align: center; margin-bottom: 20px;">
@@ -362,6 +407,7 @@
       <div style="text-align:center; margin-top:30px; padding-bottom: 50px;">
           <button class="btn-common" onclick="showGrid()">뒤로 가기</button>
       </div>
+	  <div class="scroll-glow" id="scroll-glow"></div>
   </section>
 
 </div>
@@ -872,27 +918,67 @@ let prologueIndex = 0;
 
   // 강호 세력도(그리드) 보기
   function showGrid() {
+    const detailScene = document.getElementById('detail-scene');
+    const gridScene = document.getElementById('grid-scene');
+  
+    if (detailScene) {
+      detailScene.classList.remove('show');
+      detailScene.scrollTop = 0;
+    }
+  
     hideAll();
-    document.getElementById('grid-scene').style.display = 'block';
+  
+    if (gridScene) {
+      gridScene.scrollTop = 0;
+      gridScene.style.display = 'block';
+    }
   }
+
+
 
   // 문파 상세 정보 보기
   function showDetail(name) {
-    const data = worldData[name];
-    if (!data) {
-        alert("아직 정보가 업데이트되지 않은 세력입니다.");
-        return;
+	const data = worldData[name];
+	if (!data) return;
+	
+	const detailScene = document.getElementById('detail-scene');
+	const glow = document.getElementById('scroll-glow');
+	
+	// 초기화
+	detailScene.scrollTop = 0;
+	detailScene.classList.remove('show');
+	
+	document.getElementById('detail-title').innerText = name;
+	document.getElementById('detail-img').src = data.img;
+	document.getElementById('detail-description').innerHTML = data.desc;
+	document.getElementById('detail-status').innerText = data.status;
+	
+	hideAll();
+	detailScene.style.display = 'block';
+	
+	requestAnimationFrame(() => {
+	  detailScene.classList.add('show');
+  });
+
+  // 🔽 여기서 스크롤 감지
+  detailScene.onscroll = () => {
+    const nearBottom =
+      detailScene.scrollTop + detailScene.clientHeight >=
+      detailScene.scrollHeight - 5;
+
+    if (nearBottom) {
+      glow.classList.remove('active');
+      void glow.offsetWidth;
+      glow.classList.add('active');
     }
+  };
+}
 
-    document.getElementById('detail-title').innerText = name;
-    document.getElementById('detail-img').src = data.img;
-    document.getElementById('detail-description').innerHTML = `<p>${data.desc}</p>`;
-    document.getElementById('detail-status').innerText = data.status;
+	
 
-    hideAll();
-    document.getElementById('detail-scene').style.display = 'block';
-  }
 </script>
 
 </body>
 </html>
+
+
