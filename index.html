@@ -229,46 +229,47 @@
       <div class="grid-group">
           <div class="grid-sub-title">구파일방 (九派一幇)</div>
           <div class="grid-container">
-              <div class="sect-btn" onclick="showHuashan()">화산파</div>
-              <div class="sect-btn">종남파</div>
-              <div class="sect-btn">소림파</div>
-              <div class="sect-btn">무당파</div>
-              <div class="sect-btn">아미파</div>
-              <div class="sect-btn">청성파</div>
-              <div class="sect-btn">점창파</div>
-              <div class="sect-btn">공동파</div>
-              <div class="sect-btn">해남파</div>
-              <div class="sect-btn">개방</div>
+              <div class="grid-container">
+              <div class="sect-btn" onclick="showDetail('화산파')">화산파</div>
+              <div class="sect-btn" onclick="showDetail('종남파')">종남파</div>
+              <div class="sect-btn" onclick="showDetail('소림파')">소림파</div>
+              <div class="sect-btn" onclick="showDetail('무당파')">무당파</div>
+              <div class="sect-btn" onclick="showDetail('아미파')">아미파</div>
+              <div class="sect-btn" onclick="showDetail('청성파')">청성파</div>
+              <div class="sect-btn" onclick="showDetail('점창파')">점창파</div>
+              <div class="sect-btn" onclick="showDetail('공동파')">공동파</div>
+              <div class="sect-btn" onclick="showDetail('해남파')">해남파</div>
+              <div class="sect-btn" onclick="showDetail('개방')">개방</div>
           </div>
       </div>
 
       <div class="grid-group">
           <div class="grid-sub-title">오대세가 (五大世家)</div>
           <div class="grid-container">
-              <div class="sect-btn">남궁세가</div>
-              <div class="sect-btn">모용세가</div>
-              <div class="sect-btn">사천당문</div>
-              <div class="sect-btn">황보세가</div>
-              <div class="sect-btn">제갈세가</div>
+              <div class="sect-btn" onclick="showDetail('남궁세가')">남궁세가</div>
+              <div class="sect-btn" onclick="showDetail('모용세가')">모용세가</div>
+              <div class="sect-btn" onclick="showDetail('사천당문')">사천당문</div>
+              <div class="sect-btn" onclick="showDetail('황보세가')">황보세가</div>
+              <div class="sect-btn" onclick="showDetail('제갈세가')">제갈세가</div>
           </div>
       </div>
 
       <div class="grid-group">
           <div class="grid-sub-title">흑무맹 (黑武盟)</div>
           <div class="grid-container">
-              <div class="sect-btn">장강흑도방</div>
-              <div class="sect-btn">녹림오십채</div>
-              <div class="sect-btn">하오문</div>
-              <div class="sect-btn">살막</div>
+              <div class="sect-btn" onclick="showDetail('장강흑도방')">장강흑도방</div>
+              <div class="sect-btn" onclick="showDetail('녹림오십채')">녹림오십채</div>
+              <div class="sect-btn" onclick="showDetail('하오문')">하오문</div>
+              <div class="sect-btn" onclick="showDetail('살막')">살막</div>
           </div>
       </div>
 
       <div class="grid-group">
           <div class="grid-sub-title">기타 세력</div>
           <div class="grid-container">
-              <div class="sect-btn">진주언가</div>
-              <div class="sect-btn">영겁문</div>
-              <div class="sect-btn">검마</div>
+              <div class="sect-btn" onclick="showDetail('진주언가')">진주언가</div>
+              <div class="sect-btn" onclick="showDetail('영겁문')">영겁문</div>
+              <div class="sect-btn" onclick="showDetail('검마')">검마</div>
           </div>
       </div>
 
@@ -277,25 +278,24 @@
       </div>
   </section>
 
-  <section id="huashan-scene" style="display:none; background: rgba(0, 0, 0, 0.9); height: 100%; overflow-y: auto; padding: 20px; box-sizing: border-box;">
-    <div class="grid-title">화산파 (華山派)</div>
+  <section id="detail-scene" style="display:none; background: rgba(0, 0, 0, 0.9); height: 100%; overflow-y: auto; padding: 20px; box-sizing: border-box;">
+      <div id="detail-title" class="grid-title">문파 이름</div>
     
-    <div style="text-align: center; margin-bottom: 20px;">
-        <img src="https://raw.githubusercontent.com/qdm313/ghr/main/표지.webp" style="width: 100%; max-width: 300px; border: 1px solid #555;">
-    </div>
+      <div style="text-align: center; margin-bottom: 20px;">
+          <img id="detail-img" src="" style="width: 100%; max-width: 300px; border: 1px solid #555;">
+      </div>
 
-    <div class="prologue-text" style="font-size: 0.95em; line-height: 1.8;">
-        <p>구파일방 중 하나로, 섬서성 화산에 위치한 문파.</p>
-        <p>매화검법과 자하신공으로 강호를 호령했으나, 최근 검종과 기종의 내분 이후 기세가 예전만 못하다.</p>
-        <hr style="border: 0.5px solid #444; margin: 20px 0;">
-        <p style="color: var(--point-red);">[현재 상태]</p>
-        <p>당신은 서백경의 계략에 빠져 자하신공 비급을 훔쳤다는 누명을 쓰고 문파에서 쫓겨난 상태다.</p>
-    </div>
+      <div class="prologue-text" style="font-size: 0.95em; line-height: 1.8;">
+          <div id="detail-description">문파 설명이 들어갑니다.</div>
+          <hr style="border: 0.5px solid #444; margin: 20px 0;">
+          <p style="color: var(--point-red);">[현재 관계]</p>
+          <div id="detail-status">현재 주인공과의 관계 설정</div>
+      </div>
 
-    <div style="text-align:center; margin-top:30px; padding-bottom: 50px;">
-        <button class="btn-common" onclick="showGrid()">뒤로 가기</button>
-    </div>
-</section>
+      <div style="text-align:center; margin-top:30px; padding-bottom: 50px;">
+          <button class="btn-common" onclick="showGrid()">뒤로 가기</button>
+      </div>
+  </section>
 
 </div>
 
@@ -337,7 +337,49 @@
              <p>재건에 힘쓰는 척, 장문인의 방심을 유도한 자.</p>
              <p>당신은 어처구니 없는 누명을 썼고, 화산은 결국 당신을 내쫓았다.</p>`
     }
-      
+    
+  const worldData = {
+    "화산파": {
+        img: "https://raw.githubusercontent.com/qdm313/ghr/main/화산.webp",
+        desc: "섬서성 화산에 위치한 문파. 매화검법과 자하신공이 유명하다.",
+        status: "당신을 파문한 문파. 언젠가 오해를 풀어야 한다."
+    },
+    "종남파": {
+        img: "다른_이미지_주소.jpg",
+        desc: "화산파와 숙적 관계인 문파. 무거운 검법을 주로 사용한다.",
+        status: "화산파의 몰락을 틈타 세력을 확장 중이다."
+    },
+    "소림파": {
+        img: "소림_이미지.jpg",
+        desc: "천하무학의 종가. 숭산에 위치해 있다.",
+        status: "중립을 지키고 있으나 당신의 행보를 주시하고 있다."
+    }
+    // 여기에 나머지 문파들을 쭉 추가하면 됩니다!
+};
+
+// 모든 화면 숨기기 업데이트
+function hideAll() {
+    document.getElementById('cover-scene').style.display = 'none';
+    document.getElementById('prologue-scene').style.display = 'none';
+    document.getElementById('grid-scene').style.display = 'none';
+    document.getElementById('detail-scene').style.display = 'none';
+}
+
+// 상세 페이지 보여주기 함수
+function showDetail(name) {
+    const data = worldData[name];
+    if (!data) return; // 데이터가 없으면 실행 안 함
+
+    // 1. 내용 갈아끼우기
+    document.getElementById('detail-title').innerText = name;
+    document.getElementById('detail-img').src = data.img;
+    document.getElementById('detail-description').innerHTML = `<p>${data.desc}</p>`;
+    document.getElementById('detail-status').innerText = data.status;
+
+    // 2. 화면 전환
+    hideAll();
+    document.getElementById('detail-scene').style.display = 'block';
+}      
   ];
 
 let prologueIndex = 0;
