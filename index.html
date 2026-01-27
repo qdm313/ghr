@@ -222,7 +222,37 @@
   overflow-y: auto;
   padding: 20px;
   box-sizing: border-box;
+
+  /* 모바일 터치 & 클릭 피드백 제거 */
+  -webkit-tap-highlight-color: transparent;
+
+  /* 스크롤바 숨김 (스크롤은 유지) */
+  -ms-overflow-style: none;   /* IE, Edge */
+  scrollbar-width: none;      /* Firefox */
 }
+
+/* Chrome / Safari / Edge */
+#detail-scene::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===== 스크롤 유도용 하단 페이드 ===== */
+#detail-scene::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 48px;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9),
+    rgba(0, 0, 0, 0)
+  );
+  z-index: 5;
+}
+
 
 /* 캐릭터 / 문파 이미지 */
 .character-image {
