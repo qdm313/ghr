@@ -253,16 +253,19 @@
 
 	/* 스크롤 끝 광택 */
 	.scroll-glow {
-	  position: absolute;
-	  bottom: 0;
-	  left: 0;
-	  width: 100%;
+	  width: calc(100% + 40px);
+	  margin-left: -20px;
+	  margin-right: -20px;
+
 	  height: 40px;
+	  margin-top: 20px;
+
 	  background: linear-gradient(
 		to top,
 		rgba(255,255,255,0.25),
 		rgba(255,255,255,0)
 	  );
+
 	  opacity: 0;
 	  pointer-events: none;
 	}
@@ -270,6 +273,9 @@
 	.scroll-glow.active {
 	  animation: glowFade 1.2s ease-out;
 	}
+
+
+
 
 	@keyframes glowFade {
 	  0%   { opacity: 0; }
@@ -297,23 +303,7 @@
 	  -ms-overflow-style: none;
 	}
 
-/* ===== 스크롤 하단 암시 연출 ===== */
 
-	#grid-scene::after,
-	#detail-scene::after {
-	  content: "";
-	  position: absolute;
-	  bottom: 0;
-	  left: 0;
-	  width: 100%;
-	  height: 50px;
-	  pointer-events: none;
-	  background: linear-gradient(
-		to top,
-		rgba(0,0,0,0.9),
-		rgba(0,0,0,0)
-	  );
-	}
 
   </style>
 </head>
@@ -937,42 +927,52 @@ let prologueIndex = 0;
 
 
   // 문파 상세 정보 보기
-  function showDetail(name) {
-	const data = worldData[name];
-	if (!data) return;
-	
+	function showDetail(name) {
+	  const data = worldData[name];
+	  if (!data) return;
+
+	  const detailScene = document.getElementById('detail-scene');
+	  
+	 
+	  glow.classList.remove('active');
+
+	  // 상태 초기화
+	  detailScene.scrollTop = 0;
+	  detailScene.classList.remove('show');
+
+	  document.getElementById('detail-title').innerText = name;
+	  document.getElementById('detail-img').src = data.img;
+	  document.getElementById('detail-description').innerHTML = data.desc;
+	  document.getElementById('detail-status').innerText = data.status;
+
+	  hideAll();
+	  detailScene.style.display = 'block';
+
+	  requestAnimationFrame(() => {
+		detailScene.classList.add('show');
+	  });
+	}
+
 	const detailScene = document.getElementById('detail-scene');
 	const glow = document.getElementById('scroll-glow');
-	
-	// 초기화
-	detailScene.scrollTop = 0;
-	detailScene.classList.remove('show');
-	
-	document.getElementById('detail-title').innerText = name;
-	document.getElementById('detail-img').src = data.img;
-	document.getElementById('detail-description').innerHTML = data.desc;
-	document.getElementById('detail-status').innerText = data.status;
-	
-	hideAll();
-	detailScene.style.display = 'block';
-	
-	requestAnimationFrame(() => {
-	  detailScene.classList.add('show');
-  });
 
-  // 🔽 여기서 스크롤 감지
-  detailScene.onscroll = () => {
-    const nearBottom =
-      detailScene.scrollTop + detailScene.clientHeight >=
-      detailScene.scrollHeight - 5;
+	detailScene.addEventListener('scroll', () => {
+	  const canScroll =
+		detailScene.scrollHeight > detailScene.clientHeight + 5;
 
-    if (nearBottom) {
-      glow.classList.remove('active');
-      void glow.offsetWidth;
-      glow.classList.add('active');
-    }
-  };
-}
+	  if (!canScroll) return; // 스크롤 자체가 없으면 무시
+
+	  const nearBottom =
+		detailScene.scrollTop + detailScene.clientHeight >=
+		detailScene.scrollHeight - 5;
+
+	  if (nearBottom) {
+		glow.classList.remove('active');
+		void glow.offsetWidth;
+		glow.classList.add('active');
+	  }
+	});
+
 
 	
 
@@ -980,5 +980,3 @@ let prologueIndex = 0;
 
 </body>
 </html>
-
-
