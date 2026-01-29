@@ -2,10 +2,11 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>孤俠錄 : 화산에서 파문되었다</title>
   <style>
-    @font-face {
+    body {
       font-family: 'Noto Serif KR', 'Source Han Serif', serif;
     }
 
@@ -38,6 +39,7 @@
       background-position: center;
       display: flex;
       justify-content: center;
+	  touch-action: manipulation;	  
     }
 
     .game-window {
@@ -236,13 +238,12 @@
 	
 	/* 캐릭터 / 문파 이미지 공통 */
 	.character-image {
-	  display: block;
-	  max-width: 100%;
+	  width: 100%;
+	  max-width: 500px;
 	  max-height: 40vh;
-	  margin: 20px auto;
 	  object-fit: contain;
-	  border-radius: 6px;
 	}
+
 
 
 	#detail-scene.show {
@@ -385,9 +386,9 @@
   <section id="detail-scene">
       <div id="detail-title" class="grid-title">문파 이름</div>
     
-      <div style="text-align: center; margin-bottom: 20px;">
-          <img id="detail-img" src="" style="width: 100%; max-width: 500px; border: 1px solid #555;">
-      </div>
+	  <div style="text-align: center; margin-bottom: 20px;">
+		  <img id="detail-img" class="character-image" src="">
+	  </div>
 
       <div class="prologue-text" style="font-size: 0.95em; line-height: 1.8;">
           <div id="detail-description">문파 설명이 들어갑니다.</div>
@@ -1717,7 +1718,6 @@ let prologueIndex = 0;
   
     if (detailScene) {
       detailScene.classList.remove('show');
-      detailScene.scrollTop = 0;
     }
   
     hideAll();
@@ -1740,6 +1740,9 @@ let prologueIndex = 0;
 	 
 	  glow.classList.remove('active');
 
+	  hideAll();
+	  detailScene.style.display = 'block';
+
 	  // 상태 초기화
 	  detailScene.scrollTop = 0;
 	  detailScene.classList.remove('show');
@@ -1748,9 +1751,6 @@ let prologueIndex = 0;
 	  document.getElementById('detail-img').src = data.img;
 	  document.getElementById('detail-description').innerHTML = data.desc;
 	  document.getElementById('detail-status').innerText = data.status;
-
-	  hideAll();
-	  detailScene.style.display = 'block';
 
 	  requestAnimationFrame(() => {
 		detailScene.classList.add('show');
@@ -1777,6 +1777,15 @@ let prologueIndex = 0;
 	  }
 	});
 
+let lastTouchTime = 0;
+
+document.addEventListener('touchend', function (e) {
+  const now = Date.now();
+  if (now - lastTouchTime <= 300) {
+    e.preventDefault();
+  }
+  lastTouchTime = now;
+}, { passive: false });
 
 	
 
@@ -1784,3 +1793,5 @@ let prologueIndex = 0;
 
 </body>
 </html>
+
+
