@@ -1,304 +1,683 @@
-// ============================================================
-// 3. 핵심 기능 함수들
-// ============================================================
-
-// 모든 섹션 숨기기
-function hideAll() {
-  document.getElementById('cover-scene').style.display = 'none';
-  document.getElementById('prologue-scene').style.display = 'none';
-  document.getElementById('grid-scene').style.display = 'none';
-  document.getElementById('detail-scene').style.display = 'none';
-	// 👇 [추가] 뒤로가기 버튼 레이어도 숨김
-  document.getElementById('detail-back-layer').style.display = 'none';
+:root {
+  --main-ink: #1a1a1a;
+  --point-red: #8b0000;
+  --overlay: rgba(0, 0, 0, 0.6);
 }
 
-// 프롤로그 시작
-function showPrologue() {
-  hideAll();
+/* ============================================================
+   기본 설정
+============================================================ */
 
-  const scene = document.getElementById('prologue-scene');
-  const contentBox = document.getElementById('prologue-content');
-  const endBtn = document.getElementById('prologue-end-btn');
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  overflow: hidden;
+  font-family: 'Noto Serif KR', 'Source Han Serif', serif;
+  color: #fff;
+}
 
-  scene.style.display = 'block';
-  scene.scrollTop = 0;
+body {
+  background-image: url('https://raw.githubusercontent.com/qdm313/ghr/main/바탕화면.webp');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  touch-action: manipulation;
+}
 
-  let fullHTML = "";
+/* 전체 텍스트 선택 방지 */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
-  prologueData.forEach(data => {
-    fullHTML += `
-      <div style="margin-bottom:50px;">
-        <div class="prologue-section-tag">${data.tag}</div>
-        <div style="margin-top:15px;">
-          ${data.html}
-        </div>
-      </div>
-    `;
-  });
+/* ============================================================
+   게임 창
+============================================================ */
 
-  fullHTML += `
-    <div style="text-align:center; margin-top:60px; opacity:0.8;">
-      ...그렇게 당신의 이야기가 시작된다.
-    </div>
-  `;
+/* style.css 수정 */
 
-  contentBox.innerHTML = fullHTML;
+.game-window {
+  width: 500px; /* 이제 100% 보다는 500px 고정이 안전합니다 */
+  max-width: 500px;
+  margin: 0 auto;
+  position: relative;
+  overflow-x: hidden; /* 혹시 모를 삐져나옴 방지 */
+}
 
-  endBtn.style.display = 'block';
+/* ======================
+   고정 뒤로가기 버튼 수정
+====================== */
+
+.back-fixed {
+  /* fixed 대신 absolute 사용: 부모인 .detail-ui-layer(500px 너비) 기준으로 배치됨 */
+  position: absolute; 
+  right: 20px;   /* 화면 오른쪽 끝에서 20px */
+  bottom: 20px;  /* 화면 아래 끝에서 20px */
+
+  background: rgba(0,0,0,0.6); /* 모바일 가독성을 위해 배경 불투명도 약간 상승 */
+  color: #d6c6a1;
+  border: 1px solid rgba(214,198,161,0.6);
+
+  padding: 10px 14px;
+  font-size: 1.05em;
+  z-index: 210;
+
+  opacity: 1; /* 부모 레이어의 display로 제어하므로 1로 설정 */
+  pointer-events: auto;
+  transition: transform 0.2s ease;
+}
+
+/* 기존의 복잡한 calc(right) 코드와 #detail-scene.show .back-fixed 부분은 삭제하거나 주석 처리하세요. */
+
+/* 상세 페이지 UI 레이어 위치 확인 */
+.detail-ui-layer {
+  position: absolute; 
+  inset: 0;
+  pointer-events: none; /* 레이어 자체는 클릭 통과 */
+  z-index: 200;
+  display: none; /* script.js에서 보임/숨김 제어 */
 }
 
 
-// ============================================================
-// 강호 세력도(그리드)
-// ============================================================
+/* ============================================================
+   공통 섹션
+============================================================ */
 
-function showGrid() {
-  const detailScene = document.getElementById('detail-scene');
-  const gridScene = document.getElementById('grid-scene');
+#cover-scene,
+#prologue-scene,
+#grid-scene {
+  width: 100%;
+  height: 100%;
+}
 
-  if (detailScene) {
-    detailScene.classList.remove('show');
+#cover-scene {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--overlay);
+}
+
+.cover-art {
+  width: 80%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+  margin-bottom: 40px;
+}
+
+/* ============================================================
+   프롤로그
+============================================================ */
+
+#prologue-scene {
+  display: none;
+  background: rgba(0, 0, 0, 0.85);
+  position: relative;
+	overflow-y: auto;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+.prologue-container {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 80px 30px 120px;  /* 아래 여백 추가 (버튼 공간) */
+  box-sizing: border-box;
+}
+
+.prologue-section-tag {
+  color: var(--point-red);
+  font-size: 1.4em;
+  margin-bottom: 15px;
+  letter-spacing: 5px;
+  border-bottom: 2px solid var(--point-red);
+  display: inline-block;
+  width: fit-content;
+}
+
+.prologue-text {
+  font-size: 1.05em;
+  line-height: 2;
+  word-break: keep-all;
+  color: #e0e0e0;
+  min-height: 200px;
+}
+
+/* 구버전 버튼
+.prev-btn {
+  position: absolute;
+  bottom: 25px;
+  left: 25px;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.5);
+  padding: 5px 12px;
+  font-size: 1.1em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+  z-index: 100;
+  display: none;
+}
+*/
+
+/*↓신버전버튼↓*/
+/* 프롤로그 엔드 버튼 - 장식형 */
+
+.sect-enter-btn {
+  position: relative; /* ← 중요 */
+  margin: 60px auto 0;
+  padding: 14px 40px;
+  background: rgba(0,0,0,0.4);
+  color: #d6c6a1;
+  border: 1px solid rgba(214,198,161,0.6);
+  font-family: 'Noto Serif KR';
+  font-size: 1.05em;
+  letter-spacing: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* 모서리 장식 */
+
+.sect-enter-btn::before,
+.sect-enter-btn::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(214,198,161,0.4);
+}
+
+.sect-enter-btn::before {
+  top: -6px;
+  left: -6px;
+}
+
+.sect-enter-btn::after {
+  bottom: -6px;
+  right: -6px;
+}
+
+.sect-enter-btn:hover {
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 25px rgba(214,198,161,0.25);
+  transform: translateY(-2px); /* ← X 이동 삭제 */
+}
+
+
+
+.prev-btn::before,
+.prev-btn::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(214,198,161,0.4);
+}
+
+.prev-btn::before {
+  top: -5px;
+  left: -5px;
+}
+
+.prev-btn::after {
+  bottom: -5px;
+  right: -5px;
+}
+
+.prev-btn:hover {
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 20px rgba(214,198,161,0.25);
+  transform: translateX(-50%) translateY(-2px);
+}
+/*↑신버전버튼↑*/
+
+.fade-in {
+  animation: fadeInText 1s ease-in-out forwards;
+}
+
+@keyframes fadeInText {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-
-  hideAll();
-
-  if (gridScene) {
-    gridScene.scrollTop = 0;
-    gridScene.style.display = 'block';
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-// ============================================================
-// 문파 상세 정보
-// ============================================================
-
-function showDetail(name) {
-  const data = worldData[name];
-  if (!data) return;
-
-  const detailScene = document.getElementById('detail-scene');
-  const backLayer = document.getElementById('detail-back-layer'); // 👇 [추가]
-
-  glow.classList.remove('active');
-	
-	const backLayer = document.getElementById('detail-back-layer');
-
-  hideAll();
-  
-  // 화면 보이기
-  detailScene.style.display = 'block';
-  backLayer.style.display = 'block'; // 이 부분이 있어야 absolute 버튼이 보입니다.
-
-  detailScene.scrollTop = 0;
-  detailScene.classList.remove('show');
-
-  document.getElementById('detail-title').innerText = name;
-  document.getElementById('detail-img').src = data.img;
-  document.getElementById('detail-description').innerHTML = data.desc;
-  document.getElementById('detail-status').innerText = data.status;
-
-  requestAnimationFrame(() => {
-    detailScene.classList.add('show');
-    // 버튼은 별도 애니메이션 없이 그냥 보여도 무방하나, 원하시면 여기에 backLayer 클래스 추가 가능
-  });
+.click-hint {
+  position: absolute;
+  bottom: 15%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 1.2em;
+  color: #888;
+  animation: blink 2s infinite;
+  pointer-events: none;
 }
 
-const detailScene = document.getElementById('detail-scene');
-const glow = document.getElementById('scroll-glow');
-
-detailScene.addEventListener('scroll', () => {
-  const canScroll =
-    detailScene.scrollHeight > detailScene.clientHeight + 5;
-
-  if (!canScroll) return;
-
-  const nearBottom =
-    detailScene.scrollTop + detailScene.clientHeight >=
-    detailScene.scrollHeight - 5;
-
-  if (nearBottom) {
-    glow.classList.remove('active');
-    void glow.offsetWidth;
-    glow.classList.add('active');
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
   }
-});
-
-// ============================================================
-// 모바일 더블탭 확대 방지
-// ============================================================
-
-let lastTouchTime = 0;
-
-document.addEventListener(
-  'touchend',
-  function (e) {
-    const now = Date.now();
-    if (now - lastTouchTime <= 300) {
-      e.preventDefault();
-    }
-    lastTouchTime = now;
-  },
-  { passive: false }
-);
-
-// ============================================================
-// 탭 전환 기능
-// ============================================================
-
-function switchGridTab(tabName) {
-  // 1. 모든 탭 콘텐츠 숨기기
-  const contents = document.querySelectorAll('.sub-tab-content');
-  contents.forEach(c => c.classList.remove('active'));
-
-  // 2. 모든 탭 버튼 비활성화
-  const tabs = document.querySelectorAll('.tab-btn');
-  tabs.forEach(t => t.classList.remove('active'));
-
-  // 3. 선택한 탭 콘텐츠 활성화
-  document
-    .getElementById(`sub-grid-${tabName}`)
-    .classList.add('active');
-
-  // 4. 버튼 활성화 (인덱스 기반)
-  const btnIndex =
-    tabName === 'map' ? 0 :
-    tabName === 'episode' ? 1 : 2;
-
-  tabs[btnIndex].classList.add('active');
-	
-	// === 여기 추가 ===
-  if (tabName === 'episode') renderEpisode();
-  if (tabName === 'rank') renderRank();
-
-  // 5. 스크롤 초기화
-  document.getElementById('grid-scene').scrollTop = 0;
-}
-
-// ============================================================
-// onclick를 지우고 다음으로 변경됨
-// ============================================================
-
-document.addEventListener('DOMContentLoaded', () => {
-
-  const root = document.querySelector('.game-window');
-
-  root.addEventListener('click', (e) => {
-    const action = e.target.dataset.action;
-    const tab = e.target.dataset.tab;
-    const name = e.target.dataset.name;
-
-    if (action === 'open-grid') {
-      e.stopPropagation();
-      showGrid();
-    }
-
-    if (action === 'reload') location.reload();
-    if (action === 'back-grid') showGrid();
-
-    if (tab) switchGridTab(tab);
-    if (name) showDetail(name);
-  });
-
-  // 🔥 이거 추가
-  document
-    .getElementById('cover-scene')
-    .addEventListener('click', showPrologue);
-});
-
-
-
-// ============================================================
-// 무력수준 호출
-// ============================================================
-function renderRank() {
-  const container = document.getElementById('rank-container');
-  container.innerHTML = '';
-
-  if (!rankData || rankData.length === 0) {
-    container.innerHTML = '<p>아직 공개된 공력 순위가 없습니다.</p>';
-    return;
+  50% {
+    opacity: 0.2;
   }
-
-  rankData
-    .sort((a, b) => b.power - a.power)
-    .forEach((item, index) => {
-
-      const row = document.createElement('div');
-      row.style.padding = '12px 0';
-      row.style.borderBottom = '1px solid rgba(255,255,255,0.08)';
-
-      const conditionalText = item.conditional
-        ? ` ( ${item.conditional.condition} 시 ${item.conditional.power}년 )`
-        : '';
-
-      const traitText = item.trait
-        ? ` <span style="opacity:0.6;">| ${item.trait}</span>`
-        : '';
-
-      row.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          
-          <!-- 왼쪽 -->
-          <div>
-            <strong>${index + 1}. ${item.name}</strong>
-            <div style="font-size:0.9em; opacity:0.85;">
-              공력 ${item.power}년${conditionalText}
-              ${traitText}
-            </div>
-          </div>
-
-          <!-- 오른쪽 -->
-          <div style="font-size:0.85em; opacity:0.6;">
-            ${item.faction}
-          </div>
-
-        </div>
-      `;
-
-      container.appendChild(row);
-    });
 }
 
-// ============================================================
-// 배정EP 호출
-// ============================================================
-
-function renderEpisode() {
-  const container = document.getElementById('episode-container');
-  container.innerHTML = '';
-
-  // ===== 메인 EP =====
-  const mainTitle = document.createElement('h3');
-  mainTitle.innerText = "메인 EP";
-  container.appendChild(mainTitle);
-
-  episodeData.main.forEach(ep => {
-    container.appendChild(createEpRow(ep, true));
-  });
-
-  // ===== 풍문 =====
-  const rumorTitle = document.createElement('h3');
-  rumorTitle.innerText = "강호 풍문";
-  rumorTitle.style.marginTop = "30px";
-  container.appendChild(rumorTitle);
-
-  episodeData.rumor.forEach(ep => {
-    container.appendChild(createEpRow(ep, false));
-  });
+.btn-common {
+  padding: 15px 35px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: 1px solid #fff;
+  font-family: 'Gungsuh';
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: 0.3s;
+  z-index: 10;
 }
 
-function createEpRow(ep, isMain) {
-  const row = document.createElement('div');
-  row.style.padding = "10px 0";
-  row.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
-  row.style.opacity = ep.status === "locked" ? "0.4" : "1";
+/* ======================
+   고정 뒤로가기 버튼
+====================== */
 
-  row.innerHTML = `
-    <strong>${ep.title}</strong>
-    <div style="font-size:0.9em; opacity:0.7;">
-      ${ep.desc}
-    </div>
-  `;
+.back-fixed {
+  position: fixed;
+  bottom: 20px;
 
-  return row;
+  background: rgba(0,0,0,0.25);
+  color: #d6c6a1;
+  border: 1px solid rgba(214,198,161,0.6);
+
+  padding: 10px 14px;
+  font-size: 1.05em;
+  z-index: 200;
+
+  opacity: 0;          /* 기본 숨김 */
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+
+
+
+
+
+
+/* 모서리 장식 (화려한 버튼 스킨 계승) */
+.back-fixed::before,
+.back-fixed::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(214,198,161,0.4);
+}
+
+.back-fixed::before {
+  top: -5px;
+  left: -5px;
+}
+
+.back-fixed::after {
+  bottom: -5px;
+  right: -5px;
+}
+
+.back-fixed:hover {
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 15px rgba(214,198,161,0.25);
+  transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   강호 세력도
+============================================================ */
+
+#grid-scene {
+  display: none;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  position: relative;
+}
+
+.grid-title {
+  text-align: center;
+  font-size: 1.8em;
+  text-shadow: 2px 2px 4px #000;
+  margin: 20px 0 30px;
+}
+
+.grid-group {
+  margin-bottom: 25px;
+}
+
+.grid-sub-title {
+  font-size: 1.1em;
+  color: var(--point-red);
+  border-left: 3px solid var(--point-red);
+  padding-left: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-align: left;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.sect-btn {
+  background: linear-gradient(
+    to bottom,
+    #2f2f2f,
+    #181818
+  );
+
+  color: #cfcfcf;
+  padding: 14px 14px;
+  font-weight: bold;
+  font-size: 0.9em;
+
+  border: 1px solid #444;
+  border-radius: 2px;
+
+  box-shadow: inset 0 0 4px rgba(255,255,255,0.05),
+              0 3px 8px rgba(0,0,0,0.6);
+
+  transition: all 0.2s ease;
+}
+
+.sect-btn:hover {
+  border-color: var(--point-red);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(139,0,0,0.6);
+}
+
+
+
+
+/* ============================================================
+   상세 정보 화면
+============================================================ */
+
+/* ===== detail-scene 내부의 고정 UI 레이어 ===== */
+.detail-ui-layer {
+  /* position: absolute 대신 fixed 사용 권장 (부모 영향 제거) */
+  position: absolute; 
+  inset: 0;
+  pointer-events: none;
+  z-index: 200; /* detail-scene(z-index 없음) 보다 높게 */
+  display: none; /* 기본 숨김 */
+}
+
+/* 내부 버튼은 클릭 가능해야 함 */
+.detail-ui-layer .back-fixed {
+  pointer-events: auto;
+  opacity: 1; /* 항상 보이게 설정 (display로 제어하므로) */
+}
+
+.back-fixed {
+  position: fixed;
+  right: max(20px, calc((100vw - 500px) / 2 + 20px));
+  bottom: 20px;
+}
+
+
+
+
+
+
+
+
+#detail-scene {
+  background: rgba(0, 0, 0, 0.9);
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+
+#detail-scene.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+.character-image {
+  width: 100%;
+  max-width: 500px;
+  max-height: 40vh;
+  object-fit: contain;
+}
+
+/* 스크롤 끝 광택 */
+
+.scroll-glow {
+  width: calc(100% + 40px);
+  margin-left: -20px;
+  margin-right: -20px;
+  height: 40px;
+  margin-top: 20px;
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 0.25),
+    rgba(255, 255, 255, 0)
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scroll-glow.active {
+  animation: glowFade 1.2s ease-out;
+}
+
+@keyframes glowFade {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   스크롤바 숨김 (기능 유지)
+============================================================ */
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* ============================================================
+   탭 시스템
+============================================================ */
+
+.grid-tab-bar {
+  display: flex;
+  position: sticky;
+  top: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 100;
+  border-bottom: 1px solid #333;
+  margin-bottom: 15px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 15px 0;
+  background: none;
+  border: none;
+  color: #666;
+  font-family: 'Noto Serif KR';
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tab-btn.active {
+  color: #fff;
+  font-weight: bold;
+  border-bottom: 2px solid var(--point-red);
+}
+
+.sub-tab-content {
+  display: none;
+}
+
+.sub-tab-content.active {
+  display: block;
+}
+
+
+
+/* ======================
+		도입부 다시보기
+		================= */
+		
+.reload-container {
+  text-align: right;
+  margin-top: 20px;
+  padding-bottom: 40px;
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 0.8em;
+  cursor: pointer;
+  padding: 5px 0;
+  transition: 0.2s;
+}
+
+.text-btn:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+
+/* ======================
+		커버화면 수묵안개 레이어
+		================= */
+.ink-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.6));
+  pointer-events: none;
+  z-index: 0;
+}
+		
+		
+/* 커버프레임 고급화 */
+.cover-frame {
+  position: relative;
+  padding: 12px;
+  background: linear-gradient(145deg, #111, #000);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow:
+    0 0 40px rgba(0,0,0,0.9),
+    inset 0 0 20px rgba(255,255,255,0.03);
+  margin-bottom: 40px;
+  z-index: 1;
+}
+
+.cover-art {
+  width: 88%;
+  max-width: 420px;
+  display: block;
+  margin: 0 auto;
+  filter: contrast(1.05) brightness(0.95);
+}
+
+
+/* 부제 (먹느낌) */
+.title-sub {
+  margin-top: -10px;
+  margin-bottom: 40px;
+  font-size: 0.75em;
+  letter-spacing: 6px;
+  color: #999;
+  opacity: 0.8;
+  z-index: 1;
+}
+
+/* 무협버튼 */
+
+.btn-start {
+  padding: 14px 60px;
+  background: rgba(0,0,0,0.4);
+  color: #d6c6a1;
+  border: 1px solid rgba(214,198,161,0.6);
+  font-family: 'Noto Serif KR';
+  font-size: 1em;
+  letter-spacing: 8px;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: all 0.35s ease;
+}
+
+.btn-start::before,
+.btn-start::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(214,198,161,0.4);
+}
+
+.btn-start::before {
+  top: -6px;
+  left: -6px;
+}
+
+.btn-start::after {
+  bottom: -6px;
+  right: -6px;
+}
+
+.btn-start:hover {
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 25px rgba(214,198,161,0.25);
+  transform: translateY(-2px);
 }
