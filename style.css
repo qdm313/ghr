@@ -51,38 +51,11 @@ body {
   overflow-x: hidden; /* 혹시 모를 삐져나옴 방지 */
 }
 
-/* ======================
-   고정 뒤로가기 버튼 수정
-====================== */
-
 .back-fixed {
-  /* fixed 대신 absolute 사용: 부모인 .detail-ui-layer(500px 너비) 기준으로 배치됨 */
-  position: absolute; 
-  right: 20px;   /* 화면 오른쪽 끝에서 20px */
-  bottom: 20px;  /* 화면 아래 끝에서 20px */
-
-  background: rgba(0,0,0,0.6); /* 모바일 가독성을 위해 배경 불투명도 약간 상승 */
-  color: #d6c6a1;
-  border: 1px solid rgba(214,198,161,0.6);
-
-  padding: 10px 14px;
-  font-size: 1.05em;
-  z-index: 210;
-
-  opacity: 1; /* 부모 레이어의 display로 제어하므로 1로 설정 */
-  pointer-events: auto;
-  transition: transform 0.2s ease;
-}
-
-/* 기존의 복잡한 calc(right) 코드와 #detail-scene.show .back-fixed 부분은 삭제하거나 주석 처리하세요. */
-
-/* 상세 페이지 UI 레이어 위치 확인 */
-.detail-ui-layer {
-  position: absolute; 
-  inset: 0;
-  pointer-events: none; /* 레이어 자체는 클릭 통과 */
-  z-index: 200;
-  display: none; /* script.js에서 보임/숨김 제어 */
+  position: absolute; /* fixed 대신 absolute로 변경하여 game-window 기준 배치 */
+  right: 20px;
+  bottom: 20px;
+  /* ... 나머지 스타일 ... */
 }
 
 
@@ -301,6 +274,7 @@ body {
 
 .back-fixed {
   position: fixed;
+  right: calc((100vw - 500px) / 2 + 20px);
   bottom: 20px;
 
   background: rgba(0,0,0,0.25);
@@ -439,16 +413,20 @@ body {
   opacity: 1; /* 항상 보이게 설정 (display로 제어하므로) */
 }
 
+/* 기존 스타일 유지 */
 .back-fixed {
   position: fixed;
-  right: max(20px, calc((100vw - 500px) / 2 + 20px));
+  right: calc((100vw - 500px) / 2 + 20px);
   bottom: 20px;
+  /* 나머지 스타일 동일... */
 }
 
 
 
-
-
+#detail-scene.show .back-fixed {
+  opacity: 1;
+  pointer-events: auto;
+}
 
 
 
