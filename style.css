@@ -44,12 +44,14 @@ body {
 /* style.css 수정 */
 
 .game-window {
-  width: 500px; /* 이제 100% 보다는 500px 고정이 안전합니다 */
+  width: 500px;
   max-width: 500px;
+  height: 100vh;        /* 추가 */
   margin: 0 auto;
   position: relative;
-  overflow-x: hidden; /* 혹시 모를 삐져나옴 방지 */
+  overflow: hidden;     /* 추가 */
 }
+
 
 .back-fixed {
   position: absolute; /* fixed 대신 absolute로 변경하여 game-window 기준 배치 */
@@ -268,59 +270,7 @@ body {
   z-index: 10;
 }
 
-/* ======================
-   고정 뒤로가기 버튼
-====================== */
 
-.back-fixed {
-  position: fixed;
-  right: calc((100vw - 500px) / 2 + 20px);
-  bottom: 20px;
-
-  background: rgba(0,0,0,0.25);
-  color: #d6c6a1;
-  border: 1px solid rgba(214,198,161,0.6);
-
-  padding: 10px 14px;
-  font-size: 1.05em;
-  z-index: 200;
-
-  opacity: 0;          /* 기본 숨김 */
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-
-
-
-
-
-
-/* 모서리 장식 (화려한 버튼 스킨 계승) */
-.back-fixed::before,
-.back-fixed::after {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border: 1px solid rgba(214,198,161,0.4);
-}
-
-.back-fixed::before {
-  top: -5px;
-  left: -5px;
-}
-
-.back-fixed::after {
-  bottom: -5px;
-  right: -5px;
-}
-
-.back-fixed:hover {
-  background: rgba(255,255,255,0.05);
-  box-shadow: 0 0 15px rgba(214,198,161,0.25);
-  transform: translateY(-1px);
-}
 
 
 /* ============================================================
@@ -413,13 +363,52 @@ body {
   opacity: 1; /* 항상 보이게 설정 (display로 제어하므로) */
 }
 
-/* 기존 스타일 유지 */
 .back-fixed {
-  position: fixed;
-  right: calc((100vw - 500px) / 2 + 20px);
+  position: absolute;
+  right: 20px;
   bottom: 20px;
-  /* 나머지 스타일 동일... */
+
+  background: rgba(0,0,0,0.25);
+  color: #d6c6a1;
+  border: 1px solid rgba(214,198,161,0.6);
+
+  padding: 10px 14px;
+  font-size: 1.05em;
+  z-index: 200;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
+
+
+
+/* 모서리 장식 (화려한 버튼 스킨 계승) */
+.back-fixed::before,
+.back-fixed::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(214,198,161,0.4);
+}
+
+.back-fixed::before {
+  top: -5px;
+  left: -5px;
+}
+
+.back-fixed::after {
+  bottom: -5px;
+  right: -5px;
+}
+
+.back-fixed:hover {
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 15px rgba(214,198,161,0.25);
+  transform: translateY(-1px);
+}
+
 
 
 
@@ -659,57 +648,3 @@ body {
   box-shadow: 0 0 25px rgba(214,198,161,0.25);
   transform: translateY(-2px);
 }
-
-
-
-
-
-/* 소주석 */
-
-/* 소주석 */
-
-/* 소주석 */
-
-/* 소주석 */
-
-
-
-
-
-
-/* ======================
-		대주석
-		================= */
-		
-		
-/* 소주석 */
-
-/* ======================
-		대주석
-		================= */
-		
-		
-/* 소주석 */
-
-/* ======================
-		대주석
-		================= */
-		
-		
-/* 소주석 */
-
-/* ======================
-		대주석
-		================= */
-		
-		
-/* 소주석 */
-
-/* ======================
-		대주석
-		================= */
-		
-		
-/* 소주석 */
-
-		
