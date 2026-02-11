@@ -44,8 +44,8 @@ body {
 /* style.css 수정 */
 
 .game-window {
-  width: 500px; /* 이제 100% 보다는 500px 고정이 안전합니다 */
-  max-width: 500px;
+  width: 550px; /* 이제 100% 보다는 500px 고정이 안전합니다 */
+  max-width: 550px;
   margin: 0 auto;
   position: relative;
   overflow-x: hidden; /* 혹시 모를 삐져나옴 방지 */
