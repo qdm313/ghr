@@ -1,5 +1,3 @@
-let prologueIndex = 0;
-
 // ============================================================
 // 3. 핵심 기능 함수들
 // ============================================================
@@ -10,62 +8,45 @@ function hideAll() {
   document.getElementById('prologue-scene').style.display = 'none';
   document.getElementById('grid-scene').style.display = 'none';
   document.getElementById('detail-scene').style.display = 'none';
+	// 👇 [추가] 뒤로가기 버튼 레이어도 숨김
+  document.getElementById('detail-back-layer').style.display = 'none';
 }
 
 // 프롤로그 시작
 function showPrologue() {
   hideAll();
-  document.getElementById('prologue-scene').style.display = 'block';
-  prologueIndex = 0;
-  renderPrologue();
-}
 
-// 프롤로그 렌더링
-function renderPrologue() {
-  const tagBox = document.getElementById('prologue-tag');
+  const scene = document.getElementById('prologue-scene');
   const contentBox = document.getElementById('prologue-content');
   const endBtn = document.getElementById('prologue-end-btn');
-  const hint = document.getElementById('click-hint');
-  const prevBtn = document.getElementById('prev-prologue-btn');
 
-  if (prologueIndex < prologueData.length) {
-    const data = prologueData[prologueIndex];
+  scene.style.display = 'block';
+  scene.scrollTop = 0;
 
-    tagBox.style.display = 'inline-block';
-    tagBox.innerText = data.tag;
+  let fullHTML = "";
 
-    contentBox.innerHTML = data.html;
-    contentBox.classList.remove('fade-in');
-    void contentBox.offsetWidth;
-    contentBox.classList.add('fade-in');
+  prologueData.forEach(data => {
+    fullHTML += `
+      <div style="margin-bottom:50px;">
+        <div class="prologue-section-tag">${data.tag}</div>
+        <div style="margin-top:15px;">
+          ${data.html}
+        </div>
+      </div>
+    `;
+  });
 
-    hint.style.display = 'block';
-    endBtn.style.display = 'none';
-    prevBtn.style.display = prologueIndex > 0 ? 'block' : 'none';
-  } else {
-    tagBox.style.display = 'none';
-    contentBox.innerHTML =
-      "<p style='text-align:center; margin-top:50px;'>...그렇게 당신의 이야기가 시작된다.</p>";
+  fullHTML += `
+    <div style="text-align:center; margin-top:60px; opacity:0.8;">
+      ...그렇게 당신의 이야기가 시작된다.
+    </div>
+  `;
 
-    hint.style.display = 'none';
-    endBtn.style.display = 'block';
-    prevBtn.style.display = 'block';
-  }
+  contentBox.innerHTML = fullHTML;
+
+  endBtn.style.display = 'block';
 }
 
-function nextPrologue() {
-  if (prologueIndex < prologueData.length) {
-    prologueIndex++;
-    renderPrologue();
-  }
-}
-
-function prevPrologue() {
-  if (prologueIndex > 0) {
-    prologueIndex--;
-    renderPrologue();
-  }
-}
 
 // ============================================================
 // 강호 세력도(그리드)
@@ -96,11 +77,15 @@ function showDetail(name) {
   if (!data) return;
 
   const detailScene = document.getElementById('detail-scene');
+  const backLayer = document.getElementById('detail-back-layer'); // 👇 [추가]
 
   glow.classList.remove('active');
 
   hideAll();
+  
+  // 화면 보이기
   detailScene.style.display = 'block';
+  backLayer.style.display = 'block'; // 👇 [추가] 버튼 보이기
 
   detailScene.scrollTop = 0;
   detailScene.classList.remove('show');
@@ -112,6 +97,7 @@ function showDetail(name) {
 
   requestAnimationFrame(() => {
     detailScene.classList.add('show');
+    // 버튼은 별도 애니메이션 없이 그냥 보여도 무방하나, 원하시면 여기에 backLayer 클래스 추가 가능
   });
 }
 
@@ -191,6 +177,7 @@ function switchGridTab(tabName) {
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+
   const root = document.querySelector('.game-window');
 
   root.addEventListener('click', (e) => {
@@ -198,15 +185,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const tab = e.target.dataset.tab;
     const name = e.target.dataset.name;
 
-    if (action === 'start') showPrologue();
-    if (action === 'prev-prologue') {
-      e.stopPropagation();
-      prevPrologue();
-    }
     if (action === 'open-grid') {
       e.stopPropagation();
       showGrid();
     }
+
     if (action === 'reload') location.reload();
     if (action === 'back-grid') showGrid();
 
@@ -214,10 +197,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (name) showDetail(name);
   });
 
+  // 🔥 이거 추가
   document
-    .getElementById('prologue-scene')
-    .addEventListener('click', nextPrologue);
+    .getElementById('cover-scene')
+    .addEventListener('click', showPrologue);
 });
+
+
 
 // ============================================================
 // 무력수준 호출

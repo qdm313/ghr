@@ -10,38 +10,35 @@
 <body>
 
 <div class="game-window">
+	
+	<!-- 커버 -->
+<section id="cover-scene">
+  <div class="ink-overlay"></div>
 
-  <!-- 커버 -->
-  <section id="cover-scene">
+  <div class="cover-frame">
     <img src="https://raw.githubusercontent.com/qdm313/ghr/main/표지.webp"
          class="cover-art"
          alt="표지">
-    <button class="btn-common" data-action="start">
-      - 강호 입문 -
-    </button>
-  </section>
+  </div>
+
+    <div id="click-hint" class="click-hint">
+      화면을 눌러 서사 시작
+    </div>
+</section>
 
   <!-- 프롤로그 -->
   <section id="prologue-scene">
-    <button id="prev-prologue-btn"
-            class="prev-btn"
-            data-action="prev-prologue">↺</button>
-
     <div class="prologue-container">
-      <div id="prologue-tag" class="prologue-section-tag"></div>
-      <div id="prologue-content" class="prologue-text"></div>
-    </div>
+		<div id="prologue-tag" class="prologue-section-tag"></div>
+		<div id="prologue-content" class="prologue-text"></div>
 
-    <div id="click-hint" class="click-hint">
-      화면을 눌러 다음 서사로
-    </div>
+		<button id="prologue-end-btn"
+          class="sect-enter-btn"
+          data-action="open-grid">
+    江 湖 展 開
+  </button>
+</div>
 
-    <button id="prologue-end-btn"
-            class="btn-common"
-            data-action="open-grid"
-            style="display:none; position:absolute; bottom:20%; left:50%; transform:translateX(-50%);">
-      강호 일람
-    </button>
   </section>
 
   <!-- 강호 세력도 -->
@@ -112,23 +109,21 @@
 
     <!-- [추가 섹션] 배정 에피소드 및 강함 순위 -->
 		<div id="sub-grid-episode" class="sub-tab-content">
-			<div class="grid-title">배정EP</div>
 			<div id="episode-container" class="prologue-text"></div>
 		</div>
 		
 		<div id="sub-grid-rank" class="sub-tab-content">
-			<div class="grid-title">무력 수준</div>
 			<div id="rank-container" class="prologue-text"></div>
 		</div>
 
-    <div style="text-align:center; margin-top:30px; padding-bottom:50px;">
-      <button class="btn-common" data-action="reload">처음으로</button>
-    </div>
+    <div class="reload-container">
+			<button class="text-btn" data-action="reload">도입부 다시보기</button>
+		</div>
 
   </section>
 
   <!-- 상세 -->
-  <section id="detail-scene">
+<section id="detail-scene">
     <div id="detail-title" class="grid-title"></div>
     <div style="text-align:center; margin-bottom:20px;">
       <img id="detail-img" class="character-image" src="">
@@ -140,13 +135,15 @@
       <p style="color:var(--point-red);">[현재 관계]</p>
       <div id="detail-status"></div>
     </div>
-
-    <div style="text-align:center; margin-top:30px; padding-bottom:50px;">
-      <button class="btn-common" data-action="back-grid">뒤로 가기</button>
-    </div>
-
+    
     <div class="scroll-glow" id="scroll-glow"></div>
   </section>
+
+  <div id="detail-back-layer" class="detail-ui-layer">
+    <button class="btn-common back-fixed" data-action="back-grid">↺</button>
+  </div>
+	
+	
 
 </div>
 

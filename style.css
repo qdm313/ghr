@@ -46,8 +46,9 @@ body {
   max-width: 500px;
   height: 100%;
   position: relative;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.25);
 }
+
 
 /* ============================================================
    공통 섹션
@@ -82,19 +83,19 @@ body {
 #prologue-scene {
   display: none;
   background: rgba(0, 0, 0, 0.85);
-  cursor: pointer;
   position: relative;
+	overflow-y: auto;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
 }
 
 .prologue-container {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 80px 30px 0;
+  padding: 80px 30px 120px;  /* 아래 여백 추가 (버튼 공간) */
   box-sizing: border-box;
 }
 
@@ -116,6 +117,7 @@ body {
   min-height: 200px;
 }
 
+/* 구버전 버튼
 .prev-btn {
   position: absolute;
   bottom: 25px;
@@ -131,6 +133,82 @@ body {
   z-index: 100;
   display: none;
 }
+*/
+
+/*↓신버전버튼↓*/
+/* 프롤로그 엔드 버튼 - 장식형 */
+
+.sect-enter-btn {
+  position: relative; /* ← 중요 */
+  margin: 60px auto 0;
+  padding: 14px 40px;
+  background: rgba(0,0,0,0.4);
+  color: #d6c6a1;
+  border: 1px solid rgba(214,198,161,0.6);
+  font-family: 'Noto Serif KR';
+  font-size: 1.05em;
+  letter-spacing: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* 모서리 장식 */
+
+.sect-enter-btn::before,
+.sect-enter-btn::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(214,198,161,0.4);
+}
+
+.sect-enter-btn::before {
+  top: -6px;
+  left: -6px;
+}
+
+.sect-enter-btn::after {
+  bottom: -6px;
+  right: -6px;
+}
+
+.sect-enter-btn:hover {
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 25px rgba(214,198,161,0.25);
+  transform: translateY(-2px); /* ← X 이동 삭제 */
+}
+
+
+
+.prev-btn::before,
+.prev-btn::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(214,198,161,0.4);
+}
+
+.prev-btn::before {
+  top: -5px;
+  left: -5px;
+}
+
+.prev-btn::after {
+  bottom: -5px;
+  right: -5px;
+}
+
+.prev-btn:hover {
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 20px rgba(214,198,161,0.25);
+  transform: translateX(-50%) translateY(-2px);
+}
+/*↑신버전버튼↑*/
 
 .fade-in {
   animation: fadeInText 1s ease-in-out forwards;
@@ -149,11 +227,11 @@ body {
 
 .click-hint {
   position: absolute;
-  bottom: 7%;
+  bottom: 15%;
   left: 0;
   width: 100%;
   text-align: center;
-  font-size: 0.9em;
+  font-size: 1.2em;
   color: #888;
   animation: blink 2s infinite;
   pointer-events: none;
@@ -181,10 +259,60 @@ body {
   z-index: 10;
 }
 
-.btn-common:hover {
-  background: #fff;
-  color: #000;
+/* ======================
+   고정 뒤로가기 버튼
+====================== */
+
+.back-fixed {
+  position: fixed;
+  right: calc((100vw - 500px) / 2 + 20px);
+  bottom: 20px;
+
+  background: rgba(0,0,0,0.25);
+  color: #d6c6a1;
+  border: 1px solid rgba(214,198,161,0.6);
+
+  padding: 10px 14px;
+  font-size: 1.05em;
+  z-index: 200;
+
+  opacity: 0;          /* 기본 숨김 */
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
+
+
+
+
+
+
+
+/* 모서리 장식 (화려한 버튼 스킨 계승) */
+.back-fixed::before,
+.back-fixed::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(214,198,161,0.4);
+}
+
+.back-fixed::before {
+  top: -5px;
+  left: -5px;
+}
+
+.back-fixed::after {
+  bottom: -5px;
+  right: -5px;
+}
+
+.back-fixed:hover {
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 15px rgba(214,198,161,0.25);
+  transform: translateY(-1px);
+}
+
 
 /* ============================================================
    강호 세력도
@@ -260,6 +388,39 @@ body {
    상세 정보 화면
 ============================================================ */
 
+/* ===== detail-scene 내부의 고정 UI 레이어 ===== */
+.detail-ui-layer {
+  /* position: absolute 대신 fixed 사용 권장 (부모 영향 제거) */
+  position: absolute; 
+  inset: 0;
+  pointer-events: none;
+  z-index: 200; /* detail-scene(z-index 없음) 보다 높게 */
+  display: none; /* 기본 숨김 */
+}
+
+/* 내부 버튼은 클릭 가능해야 함 */
+.detail-ui-layer .back-fixed {
+  pointer-events: auto;
+  opacity: 1; /* 항상 보이게 설정 (display로 제어하므로) */
+}
+
+/* 기존 스타일 유지 */
+.back-fixed {
+  position: fixed;
+  right: calc((100vw - 500px) / 2 + 20px);
+  bottom: 20px;
+  /* 나머지 스타일 동일... */
+}
+
+
+
+#detail-scene.show .back-fixed {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+
 #detail-scene {
   background: rgba(0, 0, 0, 0.9);
   height: 100%;
@@ -276,9 +437,9 @@ body {
 
 #detail-scene.show {
   opacity: 1;
-  transform: translateY(0);
   pointer-events: auto;
 }
+
 
 .character-image {
   width: 100%;
@@ -373,3 +534,173 @@ body {
 .sub-tab-content.active {
   display: block;
 }
+
+
+
+/* ======================
+		도입부 다시보기
+		================= */
+		
+.reload-container {
+  text-align: right;
+  margin-top: 20px;
+  padding-bottom: 40px;
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 0.8em;
+  cursor: pointer;
+  padding: 5px 0;
+  transition: 0.2s;
+}
+
+.text-btn:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+
+/* ======================
+		커버화면 수묵안개 레이어
+		================= */
+.ink-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.6));
+  pointer-events: none;
+  z-index: 0;
+}
+		
+		
+/* 커버프레임 고급화 */
+.cover-frame {
+  position: relative;
+  padding: 12px;
+  background: linear-gradient(145deg, #111, #000);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow:
+    0 0 40px rgba(0,0,0,0.9),
+    inset 0 0 20px rgba(255,255,255,0.03);
+  margin-bottom: 40px;
+  z-index: 1;
+}
+
+.cover-art {
+  width: 88%;
+  max-width: 420px;
+  display: block;
+  margin: 0 auto;
+  filter: contrast(1.05) brightness(0.95);
+}
+
+
+/* 부제 (먹느낌) */
+.title-sub {
+  margin-top: -10px;
+  margin-bottom: 40px;
+  font-size: 0.75em;
+  letter-spacing: 6px;
+  color: #999;
+  opacity: 0.8;
+  z-index: 1;
+}
+
+/* 무협버튼 */
+
+.btn-start {
+  padding: 14px 60px;
+  background: rgba(0,0,0,0.4);
+  color: #d6c6a1;
+  border: 1px solid rgba(214,198,161,0.6);
+  font-family: 'Noto Serif KR';
+  font-size: 1em;
+  letter-spacing: 8px;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: all 0.35s ease;
+}
+
+.btn-start::before,
+.btn-start::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(214,198,161,0.4);
+}
+
+.btn-start::before {
+  top: -6px;
+  left: -6px;
+}
+
+.btn-start::after {
+  bottom: -6px;
+  right: -6px;
+}
+
+.btn-start:hover {
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 25px rgba(214,198,161,0.25);
+  transform: translateY(-2px);
+}
+
+
+
+
+
+/* 소주석 */
+
+/* 소주석 */
+
+/* 소주석 */
+
+/* 소주석 */
+
+
+
+
+
+
+/* ======================
+		대주석
+		================= */
+		
+		
+/* 소주석 */
+
+/* ======================
+		대주석
+		================= */
+		
+		
+/* 소주석 */
+
+/* ======================
+		대주석
+		================= */
+		
+		
+/* 소주석 */
+
+/* ======================
+		대주석
+		================= */
+		
+		
+/* 소주석 */
+
+/* ======================
+		대주석
+		================= */
+		
+		
+/* 소주석 */
+
+		
