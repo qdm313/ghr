@@ -80,12 +80,14 @@ function showDetail(name) {
   const backLayer = document.getElementById('detail-back-layer'); // 👇 [추가]
 
   glow.classList.remove('active');
+	
+	const backLayer = document.getElementById('detail-back-layer');
 
   hideAll();
   
   // 화면 보이기
   detailScene.style.display = 'block';
-  backLayer.style.display = 'block'; // 👇 [추가] 버튼 보이기
+  backLayer.style.display = 'block'; // 이 부분이 있어야 absolute 버튼이 보입니다.
 
   detailScene.scrollTop = 0;
   detailScene.classList.remove('show');
@@ -300,4 +302,3 @@ function createEpRow(ep, isMain) {
 
   return row;
 }
-
