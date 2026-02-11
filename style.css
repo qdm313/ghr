@@ -41,12 +41,21 @@ body {
    게임 창
 ============================================================ */
 
+/* style.css 수정 */
+
 .game-window {
-  width: 100%;
+  width: 500px; /* 이제 100% 보다는 500px 고정이 안전합니다 */
   max-width: 500px;
-  height: 100%;
+  margin: 0 auto;
   position: relative;
-  background: rgba(0, 0, 0, 0.25);
+  overflow-x: hidden; /* 혹시 모를 삐져나옴 방지 */
+}
+
+.back-fixed {
+  position: absolute; /* fixed 대신 absolute로 변경하여 game-window 기준 배치 */
+  right: 20px;
+  bottom: 20px;
+  /* ... 나머지 스타일 ... */
 }
 
 
